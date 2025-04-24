@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Hero from "@/components/Hero"
 import HowItWorks from "@/components/HowItWorks";
-import { AnimatedTestimonialsDemo } from "@/components/Testimonials";
+import  AnimatedTestimonialsDemo  from "@/components/Testimonials";
 import {
   Accordion,
   AccordionContent,

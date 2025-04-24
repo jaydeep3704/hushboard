@@ -1,4 +1,4 @@
-
+"use client"
 import React from 'react'
 import {
     Card,
@@ -24,7 +24,7 @@ const cardInfo = [
         icon:<Share2/>
     },
     {
-        title: "Recieve Feedback",
+        title: "Receive Feedback",
         description: "Get honest, anonymous messages instantly",
         icon:<MessageSquareMore/>
     }
@@ -32,9 +32,9 @@ const cardInfo = [
 
 const HowItWorks = () => {
     return (
-        <section className='py-10  px-[4%] '>
+        <section className='py-20   mt-10  px-[4%] ' id='how-it-works'>
             <div className='max-w-5xl mx-auto'>
-            <h1 className='md:text-6xl text-4xl text-center md:text-start'>How It Works ?</h1>
+            <h1 className='md:text-6xl text-4xl text-center md:text-start'>How It Works?</h1>
             <div className='grid grid-cols-1 md:grid-cols-3  md:justify-evenly gap-5 md:gap-10   mt-8'>
             {
                 cardInfo.map((card) => {

@@ -34,7 +34,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
           <Navbar/>
+          <div className='py-20 '>
           {children}
+          </div>
+         
           <Footer/>
     </ClerkProvider>
   )

@@ -3,15 +3,15 @@ import React from 'react'
 import Image from 'next/image'
 import Illustration from "@/assets/anonymous-illustration.png"
 import { motion } from 'motion/react'
-import { span } from 'motion/react-client'
 
+import Link from 'next/link'
 const Hero = () => {
 
     const heroTitle = "Say What Matters - anonymously"
 
 
     return (
-        <section className='py-20 px-[4%] '>
+        <section className='py-28 px-[4%] '>
             <div className=' mx-auto  flex md:flex-row flex-col-reverse  w-full  md:w-5xl  md:justify-between items-center gap-20  '>
                 <div className='w-full md:w-1/2  flex flex-col items-center md:items-start'>
                     <div className='flex flex-col gap-6  '>
@@ -24,30 +24,34 @@ const Hero = () => {
                                     ease: "easeInOut",
                                 }}>{word + " "}</motion.span>
                         )}</h1>
-                        <motion.p 
-                        initial={{ opacity: 0, filter: "blur(4px)" }} 
-                        animate={{ opacity: 1, filter: "blur(0px)" }} 
-                        transition={{ delay: 0.5, ease: "easeInOut", duration: 0.3 }} 
-                        className='text-white/50 text-sm md:text-md md:text-start text-center'>
-                            Get honest feedback without revealing who you are. 
+                        <motion.p
+                            initial={{ opacity: 0, filter: "blur(4px)" }}
+                            animate={{ opacity: 1, filter: "blur(0px)" }}
+                            transition={{ delay: 0.5, ease: "easeInOut", duration: 0.3 }}
+                            className='text-white/50 text-sm md:text-md md:text-start text-center'>
+                            Get honest feedback without revealing who you are.
                             <br />Share your link and receive anonymous messages instantly
                         </motion.p>
                     </div>
 
                     <motion.div className='flex gap-5 mt-10'
-                     initial={{
-                        opacity: 0,
-                      }}
-                      animate={{
-                        opacity: 1,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        delay: 1,
-                      }}
+                        initial={{
+                            opacity: 0,
+                        }}
+                        animate={{
+                            opacity: 1,
+                        }}
+                        transition={{
+                            duration: 0.3,
+                            delay: 1,
+                        }}
                     >
                         <button className='py-2 px-8 rounded-md bg-accent text-primary font-semibold text-sm md:text-md'>Generate Your Link</button>
-                        <button className='py-2 px-8 rounded-md bg-secondary-foreground font-semibold border border-whie/15 text-sm md:text-md'>See How It Works</button>
+                        <a href="#how-it-works" className="py-2 px-8 rounded-md bg-secondary-foreground font-semibold border border-white/15 text-sm md:text-md cursor-pointer inline-block">
+                            See How It Works
+                        </a>
+
+
                     </motion.div>
 
                 </div>

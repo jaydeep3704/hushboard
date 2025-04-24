@@ -1,6 +1,9 @@
+
+"use client"
+
 import { AnimatedTestimonials } from "./ui/animated-testemonials";
 
-export function AnimatedTestimonialsDemo() {
+export default function AnimatedTestimonialsDemo() {
   const testimonials = [
     {
       quote:
@@ -38,5 +41,7 @@ export function AnimatedTestimonialsDemo() {
       src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
   ];
-  return <AnimatedTestimonials testimonials={testimonials} />;
+  return <AnimatedTestimonials testimonials={testimonials} autoplay/>;
 }
+
+
