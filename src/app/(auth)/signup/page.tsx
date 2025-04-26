@@ -1,62 +1,162 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
 import { BackgroundBeams } from '@/components/ui/background-beams'
 import { twMerge } from 'tailwind-merge'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { Separator } from '@/components/ui/separator'
 import { IconBrandGoogle } from '@tabler/icons-react'
+import { useSignUp } from '@clerk/nextjs'
+import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { SignupSchema } from '@/zodSchema/authSchema'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation'
+import EmailVerification from '@/components/EmailVerification'
+import Loader from '@/components/Loader'
+
 const page = () => {
+
+  const { isLoaded, setActive, signUp } = useSignUp()
+  const [error, setError] = useState("")
+  const [code, setCode] = useState("")
+  const [pendingVerification, setPendingVerification] = useState<Boolean>(false)
+  const [isloading, setIsLoading] = useState(false)
+  const router = useRouter()
+
+  const form = useForm({
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    resolver: zodResolver(SignupSchema)
+  })
+
+  const onSubmit = async (data: { email: string, username: string, password: string, confirmPassword: string }) => {
+    const { email, username, password, confirmPassword } = data;
+    setIsLoading(true)
+    if (!isLoaded) {
+      setIsLoading(false)
+      return;
+    }
+    try {
+      await signUp.create({
+        emailAddress: email,
+        password: password,
+        username: username
+      })
+      await signUp.prepareEmailAddressVerification({
+        strategy: "email_code"
+      })
+
+      setPendingVerification(true)
+    } catch (error: any) {
+      console.log(JSON.stringify(error, null, 2))
+      setError(error.errors[0].message)
+    }
+    setIsLoading(false)
+  }
+
+
+
+
+  const fields = [
+    {
+      label: 'Username',
+      placeholder: 'johnDoe123',
+      type: 'text',
+      id: 'username',
+    },
+    {
+      label: 'Email',
+      placeholder: 'johndoe123@gmail.com',
+      type: 'email',
+      id: 'email'
+    },
+    {
+      label: 'Password',
+      placeholder: 'johnDoe@123',
+      type: 'password',
+      id: 'password'
+
+    },
+    {
+      label: 'Confirm Password',
+      placeholder: 'johnDoe@123',
+      type: 'password',
+      id: 'confirmPassword'
+
+    },
+
+  ]
+
+
   return (
     <section className='w-full min-h-screen h-full flex justify-center items-center z-1'>
-      <form action="" className='z-100 bg-secondary-foreground/60 p-8 rounded-lg border border-white/15 m-4'>
-        <div className='text-center'>
-        <h1 className='text-3xl'>Welcome to HushBoard</h1>      
-        <p className='text-md mt-3 text-white/50'>Create your account</p>  
-        </div>
+      {!pendingVerification ? (<Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='z-100 bg-secondary-foreground/60 p-8 rounded-lg border border-white/15 m-4'>
+          <div className='text-center'>
+            <h1 className='text-3xl'>Welcome to HushBoard</h1>
+            <p className='text-md mt-3 text-white/50'>Create your account</p>
+          </div>
 
-        <div className='mt-5 flex flex-col gap-5'>
-           
-           
-            <LabelInputContainer>
-                <Label htmlFor='username'>Username</Label>
-                <Input className='' type='text' placeholder='janedoe1234' id='username' />
-            </LabelInputContainer>
-            <LabelInputContainer>
-                <Label htmlFor='email'>Email</Label>
-                <Input className='' type='email' placeholder='janedoe@gmail.com' id='email' />
-            </LabelInputContainer>
-            
-            <LabelInputContainer>
-                <Label htmlFor='password'>Password</Label>
-                <Input className='' type='password' placeholder='Janedoe@123' id='password'/>
-            </LabelInputContainer>
+          <div className='mt-5 flex flex-col gap-5'>
+            {
+              fields.map((item) => {
+                return (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name={item.id as "username" || "email" || "password" || "confirm_password"}
+                    render={({ field }) => (
+                      <FormItem>
 
-              
-            <LabelInputContainer>
-                <Label htmlFor='confirm-password'>Confirm Password</Label>
-                <Input className='' type='password' placeholder='Janedoe@123' id='confirm-password'/>
-            </LabelInputContainer>
-  
+                        <FormControl>
+                          <LabelInputContainer>
+                            <Label htmlFor={item.id}>{item.label}</Label>
+                            <Input className='' type={item.type} placeholder={item.placeholder} id={item.id} {...field} />
+                          </LabelInputContainer>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              })
+            }
 
-            <button className='py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5'>Sign Up  <ArrowRight className='size-4'/></button>
-        </div>
-           
-           <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
-              <span className='block w-full h-[1px] bg-white/15'></span>
-              OR
-              <span className='block w-full h-[1px] bg-white/15'></span>
-           </div>
 
-           <div className='mt-5'>
-               <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary '><IconBrandGoogle/> Sign in with Google</button>
-           </div>
+            <button className='py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>
 
-            <p className='text-sm mt-5 text-center text-white/50'>Already have an account ? <Link href='signin' className='text-white'> 
+              {
+                isloading ? <Loader /> : (<span className='flex gap-5 items-center'>Sign Up  <ArrowRight className='size-4' />
+                </span>)
+              }
+            </button>
+            <div id="clerk-captcha"></div>
+
+          </div>
+
+          <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
+            <span className='block w-full h-[1px] bg-white/15'></span>
+            OR
+            <span className='block w-full h-[1px] bg-white/15'></span>
+          </div>
+
+          <div className='mt-5'>
+            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary '><IconBrandGoogle /> Sign in with Google</button>
+          </div>
+
+          <p className='text-sm mt-5 text-center text-white/50'>Already have an account ? <Link href='signin' className='text-white'>
             Log in Here</Link></p>
-      </form>
-      <BackgroundBeams className='z-2'/>
+        </form>
+      </Form>) :
+        <EmailVerification />
+      }
+      <BackgroundBeams className='z-2' />
     </section>
   )
 }

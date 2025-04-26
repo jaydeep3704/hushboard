@@ -1,10 +1,12 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-
+import { useSession } from '@clerk/nextjs'
 import { twMerge } from 'tailwind-merge'
 import { AnimatePresence, motion } from "motion/react"
 import { useScroll,useMotionValueEvent } from 'motion/react'
+import { useAuth } from "@clerk/nextjs";
+
 const Navbar = () => {
 
   const navLinks = [{
@@ -24,6 +26,9 @@ const Navbar = () => {
     href: "settings"
   }
   ]
+
+  const session=useSession()
+  const {signOut}=useAuth()
 
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const { scrollYProgress } = useScroll()
@@ -46,9 +51,14 @@ const Navbar = () => {
         </nav>
         <div className='flex gap-5 items-center'>
 
-          <Link href={'/signin'}>
+         { !session.isSignedIn ? <Link href={'/signin'}>
             <button className='bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  '>Sign In</button>
           </Link>
+          :
+          
+            <button className='bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  ' onClick={()=>signOut()}>Sign Out</button>
+          
+      }
 
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={twMerge("lucide lucide-menu-icon lucide-menu ", 'md:hidden')}
             onClick={() => setShowMenu(!showMenu)}

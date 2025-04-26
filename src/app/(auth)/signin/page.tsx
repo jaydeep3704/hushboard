@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
@@ -5,45 +6,102 @@ import { BackgroundBeams } from '@/components/ui/background-beams'
 import { twMerge } from 'tailwind-merge'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { Separator } from '@/components/ui/separator'
 import { IconBrandGoogle } from '@tabler/icons-react'
+import { useSignUp } from '@clerk/nextjs'
+import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
+import { useForm } from 'react-hook-form'
+import { SigninSchema } from '@/zodSchema/authSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 const page = () => {
+
+  
+  const {isLoaded,setActive,signUp}=useSignUp()
+
+  const form = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    },
+    
+    resolver:zodResolver(SigninSchema)
+  })
+
+  const onSubmit = (data: {email:string,password:string}) => {
+    
+    console.log(data)
+  }
+
+  const fields = [
+    {
+      label: 'Email',
+      placeholder: 'johndoe123@gmail.com',
+      type: 'email',
+      id: 'email'
+    },
+    {
+      label: 'Password',
+      placeholder: 'johnDoe@123',
+      type: 'password',
+      id: 'password'
+
+    },
+  ]
+
+
   return (
-    <section className='w-screen h-screen flex justify-center items-center z-1'>
-      <form action="" className='z-100 bg-secondary-foreground/60 p-8 rounded-lg border border-white/15'>
-        <div className='text-center'>
-        <h1 className='text-3xl'>Welcome to HushBoard</h1>      
-        <p className='text-md mt-3 text-white/50'>Log in to continue</p>  
-        </div>
+    <section className='w-full min-h-screen h-full flex justify-center items-center z-1'>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='z-100 bg-secondary-foreground/60 p-8 rounded-lg border border-white/15 m-4'>
+          <div className='text-center'>
+            <h1 className='text-3xl'>Welcome to HushBoard</h1>
+            <p className='text-md mt-3 text-white/50'>Login to continue</p>
+          </div>
 
-        <div className='mt-5 flex flex-col gap-5'>
-           
-            <LabelInputContainer>
-                <Label htmlFor='email'>Email</Label>
-                <Input className='' type='email' placeholder='janedoe@gmail.com' id='email' />
-            </LabelInputContainer>
-            
-            <LabelInputContainer>
-                <Label htmlFor='password'>Password</Label>
-                <Input className='' type='password' placeholder='Janedoe@123' id='password'/>
-            </LabelInputContainer>
+          <div className='mt-5 flex flex-col gap-5'>
+            {
+              fields.map((item) => {
+                return (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name={item.id as "email"||"password"}
+                    render={({ field }) => (
+                      <FormItem>
 
-            <button className='py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5'>Sign In  <ArrowRight className='size-4'/></button>
-        </div>
-           
-           <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
-              <span className='block w-full h-[1px] bg-white/15'></span>
-              OR
-              <span className='block w-full h-[1px] bg-white/15'></span>
-           </div>
+                        <FormControl>
+                          <LabelInputContainer>
+                            <Label htmlFor={item.id}>{item.label}</Label>
+                            <Input className='' type={item.type} placeholder={item.placeholder} id={item.id} {...field} />
+                          </LabelInputContainer>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              })
+            }
 
-           <div className='mt-5'>
-               <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary '><IconBrandGoogle/> Sign in with Google</button>
-           </div>
 
-            <p className='text-sm mt-5 text-center text-white/50'>Don't have an account ?<Link href='signup' className='text-white'> Register Here</Link></p>
-      </form>
-      <BackgroundBeams className='z-2'/>
+            <button className='hover:opacity-70 transition ease-in-out py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>Sign In  <ArrowRight className='size-4' /></button>
+          </div>
+
+          <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
+            <span className='block w-full h-[1px] bg-white/15'></span>
+            OR
+            <span className='block w-full h-[1px] bg-white/15'></span>
+          </div>
+
+          <div className='mt-5'>
+            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out'><IconBrandGoogle /> Sign in with Google</button>
+          </div>
+
+          <p className='text-sm mt-5 text-center text-white/50'>Don't have an account ? <Link href='signup' className='text-white'>
+            Register Here </Link></p>
+        </form>
+        <BackgroundBeams className='z-2' />
+      </Form>
     </section>
   )
 }
