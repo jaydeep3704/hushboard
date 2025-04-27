@@ -9,7 +9,12 @@ import { useAuth } from "@clerk/nextjs";
 
 const Navbar = () => {
 
-  const navLinks = [{
+  const navLinks = [
+    {
+      label: "Home",
+      href: "/"
+    },
+    {
     label: "Messages",
     href: "messages"
   },
@@ -17,10 +22,7 @@ const Navbar = () => {
     label: "Boards",
     href: "boards"
   },
-  {
-    label: "Customize Page",
-    href: "customize_page"
-  },
+  
   {
     label: "Settings",
     href: "settings"
@@ -52,11 +54,13 @@ const Navbar = () => {
         <div className='flex gap-5 items-center'>
 
          { !session.isSignedIn ? <Link href={'/signin'}>
-            <button className='bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  '>Sign In</button>
+            <button className='hover:opacity-70 transition bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  '>Sign In</button>
           </Link>
           :
           
-            <button className='bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  ' onClick={()=>signOut()}>Sign Out</button>
+            <button className='hover:opacity-70 transition bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  ' onClick={async()=>{
+              await signOut()  
+            }}>Sign Out</button>
           
       }
 

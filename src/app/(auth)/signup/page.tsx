@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { IconBrandGoogle } from '@tabler/icons-react'
-import { useSignUp } from '@clerk/nextjs'
+import { useSignIn, useSignUp } from '@clerk/nextjs'
 import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { SignupSchema } from '@/zodSchema/authSchema'
@@ -19,6 +19,7 @@ import Loader from '@/components/Loader'
 const page = () => {
 
   const { isLoaded, setActive, signUp } = useSignUp()
+  const {signIn}=useSignIn()
   const [error, setError] = useState("")
   const [code, setCode] = useState("")
   const [pendingVerification, setPendingVerification] = useState<Boolean>(false)
@@ -55,10 +56,46 @@ const page = () => {
       setPendingVerification(true)
     } catch (error: any) {
       console.log(JSON.stringify(error, null, 2))
-      setError(error.errors[0].message)
+      const clerkErrors = error.errors;
+
+      clerkErrors.forEach((err: any) => {
+        if (err.meta?.paramName === 'email_address') {
+          form.setError('email', { message: err.message });
+        }
+        else if (err.meta?.paramName === 'username') {
+          form.setError('username', { message: err.message });
+        }
+        else {
+          // general fallback
+          setError(err.message);
+        }
+      });
+    
     }
     setIsLoading(false)
   }
+  const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
+
+
+  const handleGoogleAuth = async (e:any) => {
+    
+    e.preventDefault()
+    setIsGoogleSignInLoading(true)
+    try {
+      await signIn?.authenticateWithRedirect({
+        strategy: 'oauth_google',
+        redirectUrl: '/sso-callback',
+        redirectUrlComplete: '/boards',
+        
+      });
+    
+    } catch (err) {
+      console.error('Google Auth Error:', err);
+    }
+    setIsGoogleSignInLoading(false)
+  };
+
+
 
 
 
@@ -147,7 +184,12 @@ const page = () => {
           </div>
 
           <div className='mt-5'>
-            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary '><IconBrandGoogle /> Sign in with Google</button>
+            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out' onClick={handleGoogleAuth}>
+            {!isGoogleSignInLoading?
+             <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span>:
+              <Loader/>
+            }
+            </button>
           </div>
 
           <p className='text-sm mt-5 text-center text-white/50'>Already have an account ? <Link href='signin' className='text-white'>

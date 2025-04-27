@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
 import { BackgroundBeams } from '@/components/ui/background-beams'
@@ -7,17 +7,20 @@ import { twMerge } from 'tailwind-merge'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { IconBrandGoogle } from '@tabler/icons-react'
-import { useSignUp } from '@clerk/nextjs'
 import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { SigninSchema } from '@/zodSchema/authSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-
+import { useSignIn } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
+import Loader from '@/components/Loader'
 const page = () => {
 
   
-  const {isLoaded,setActive,signUp}=useSignUp()
-
+  const {isLoaded,setActive,signIn}=useSignIn()
+  const [error,setError]=useState('')
+  const [loading,setLoading]=useState(false)
+  const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
   const form = useForm({
     defaultValues: {
       email: '',
@@ -27,10 +30,69 @@ const page = () => {
     resolver:zodResolver(SigninSchema)
   })
 
-  const onSubmit = (data: {email:string,password:string}) => {
-    
-    console.log(data)
+  const router=useRouter()
+
+  const onSubmit = async (data: {email:string,password:string}) => {
+    setLoading(true)
+    if(!isLoaded){
+      return;
+    }
+    try {
+      const result=await signIn.create({
+        identifier:data.email,
+        password:data.password
+      })  
+
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.push("/boards"); // redirect after login
+      } else {
+        console.log(result);
+      }
+    } 
+    catch (error:any) {
+      setError(error.errors[0]?.message || "Something went wrong");
+      const clerkErrors = error.errors || [];
+
+      clerkErrors.forEach((error: any) => {
+        switch (error.code) {
+          case "form_identifier_not_found":
+            form.setError("email", { message: "No account found with this email." });
+            break;
+          case "form_password_incorrect":
+            form.setError("password", { message: "Incorrect password." });
+            break;
+          default:
+            form.setError("email", { message: error.message || "Something went wrong." });
+            break;
+        }
+      });
+    }
+    setLoading(false)
   }
+
+
+   const handleGoogleAuth = async (e:any) => {
+    
+    e.preventDefault()
+    setIsGoogleSignInLoading(true)
+    try {
+      await signIn?.authenticateWithRedirect({
+        strategy: 'oauth_google',
+        redirectUrl: '/sso-callback',
+        redirectUrlComplete: '/boards',
+        
+      });
+    
+    } catch (err) {
+      console.error('Google Auth Error:', err);
+    }
+    setIsGoogleSignInLoading(false)
+  };
+
+
+
+
 
   const fields = [
     {
@@ -84,7 +146,11 @@ const page = () => {
             }
 
 
-            <button className='hover:opacity-70 transition ease-in-out py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>Sign In  <ArrowRight className='size-4' /></button>
+            <button className='hover:opacity-70 transition ease-in-out py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>
+              {
+              loading ? <Loader/>: <span className='flex items-center justify-center gap-5'>Sign In  <ArrowRight className='size-4' /></span>
+              }
+              </button>
           </div>
 
           <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
@@ -94,7 +160,12 @@ const page = () => {
           </div>
 
           <div className='mt-5'>
-            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out'><IconBrandGoogle /> Sign in with Google</button>
+            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out' onClick={handleGoogleAuth}>
+            {!isGoogleSignInLoading?
+             <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span>:
+              <Loader/>
+            }
+            </button>
           </div>
 
           <p className='text-sm mt-5 text-center text-white/50'>Don't have an account ? <Link href='signup' className='text-white'>
