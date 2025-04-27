@@ -1,10 +1,10 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
 import { BackgroundBeams } from '@/components/ui/background-beams'
 import { twMerge } from 'tailwind-merge'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { IconBrandGoogle } from '@tabler/icons-react'
 import { useSignUp } from '@clerk/nextjs'
@@ -15,20 +15,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 const page = () => {
 
-  
-  const {isLoaded,setActive,signUp}=useSignUp()
+
+  const { isLoaded, setActive, signUp } = useSignUp()
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
       email: '',
       password: ''
     },
-    
-    resolver:zodResolver(SigninSchema)
+
+    resolver: zodResolver(SigninSchema)
   })
 
-  const onSubmit = (data: {email:string,password:string}) => {
-    
+  const onSubmit = (data: { email: string, password: string }) => {
+
     console.log(data)
   }
 
@@ -65,14 +67,21 @@ const page = () => {
                   <FormField
                     key={item.id}
                     control={form.control}
-                    name={item.id as "email"||"password"}
+                    name={item.id as "email" || "password"}
                     render={({ field }) => (
                       <FormItem>
 
                         <FormControl>
                           <LabelInputContainer>
                             <Label htmlFor={item.id}>{item.label}</Label>
-                            <Input className='' type={item.type} placeholder={item.placeholder} id={item.id} {...field} />
+                            <div className='relative'>
+                              <Input className='' type={item.label === "Password" ? showPassword ? "text" : "password" : item.label} placeholder={item.placeholder} id={item.id} {...field} />
+                              {item.label === "Password" && (
+                                <button className='absolute right-3 top-2 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
+                                  {showPassword ? <EyeOff className='text-white/70' /> : <Eye className='text-white/70' />}
+                                </button>
+                              )}
+                            </div>
                           </LabelInputContainer>
                         </FormControl>
                         <FormMessage />
