@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
 import { BackgroundBeams } from '@/components/ui/background-beams'
 import { twMerge } from 'tailwind-merge'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { IconBrandGoogle } from '@tabler/icons-react'
 import { useSignIn, useSignUp } from '@clerk/nextjs'
@@ -25,6 +25,8 @@ const page = () => {
   const [pendingVerification, setPendingVerification] = useState<Boolean>(false)
   const [isloading, setIsLoading] = useState(false)
   const router = useRouter()
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -153,8 +155,14 @@ const page = () => {
 
                         <FormControl>
                           <LabelInputContainer>
-                            <Label htmlFor={item.id}>{item.label}</Label>
-                            <Input className='' type={item.type} placeholder={item.placeholder} id={item.id} {...field} />
+                            <div className='relative'>
+                              <Input className='' type={(item.label === "Password" || item.label === "Confirm Password") ? (showPassword ? "text" : "password") : item.type} placeholder={item.placeholder} id={item.id} {...field} />
+                              {(item.label === "Password" || item.label === "Confirm Password") && (
+                                <button className='absolute right-3 top-2 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
+                                  {showPassword ? <EyeOff className='text-white/70' /> : <Eye className='text-white/70' />}
+                                </button>
+                              )}
+                            </div>
                           </LabelInputContainer>
                         </FormControl>
                         <FormMessage />

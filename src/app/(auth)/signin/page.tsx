@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
 import { BackgroundBeams } from '@/components/ui/background-beams'
 import { twMerge } from 'tailwind-merge'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { IconBrandGoogle } from '@tabler/icons-react'
 import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
@@ -13,62 +13,32 @@ import { SigninSchema } from '@/zodSchema/authSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSignIn } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+
 import Loader from '@/components/Loader'
 const page = () => {
 
   
-  const {isLoaded,setActive,signIn}=useSignIn()
+  const {signIn}=useSignIn()
   const [error,setError]=useState('')
   const [loading,setLoading]=useState(false)
   const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
+
+  const { isLoaded, setActive, signUp } = useSignUp()
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm({
     defaultValues: {
       email: '',
       password: ''
     },
-    
-    resolver:zodResolver(SigninSchema)
+
+    resolver: zodResolver(SigninSchema)
   })
 
-  const router=useRouter()
+  const onSubmit = (data: { email: string, password: string }) => {
 
-  const onSubmit = async (data: {email:string,password:string}) => {
-    setLoading(true)
-    if(!isLoaded){
-      return;
-    }
-    try {
-      const result=await signIn.create({
-        identifier:data.email,
-        password:data.password
-      })  
-
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        router.push("/boards"); // redirect after login
-      } else {
-        console.log(result);
-      }
-    } 
-    catch (error:any) {
-      setError(error.errors[0]?.message || "Something went wrong");
-      const clerkErrors = error.errors || [];
-
-      clerkErrors.forEach((error: any) => {
-        switch (error.code) {
-          case "form_identifier_not_found":
-            form.setError("email", { message: "No account found with this email." });
-            break;
-          case "form_password_incorrect":
-            form.setError("password", { message: "Incorrect password." });
-            break;
-          default:
-            form.setError("email", { message: error.message || "Something went wrong." });
-            break;
-        }
-      });
-    }
-    setLoading(false)
+    console.log(data)
   }
 
 
@@ -127,14 +97,21 @@ const page = () => {
                   <FormField
                     key={item.id}
                     control={form.control}
-                    name={item.id as "email"||"password"}
+                    name={item.id as "email" || "password"}
                     render={({ field }) => (
                       <FormItem>
 
                         <FormControl>
                           <LabelInputContainer>
                             <Label htmlFor={item.id}>{item.label}</Label>
-                            <Input className='' type={item.type} placeholder={item.placeholder} id={item.id} {...field} />
+                            <div className='relative'>
+                              <Input className='' type={item.label === "Password" ? showPassword ? "text" : "password" : item.label} placeholder={item.placeholder} id={item.id} {...field} />
+                              {item.label === "Password" && (
+                                <button className='absolute right-3 top-2 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
+                                  {showPassword ? <EyeOff className='text-white/70' /> : <Eye className='text-white/70' />}
+                                </button>
+                              )}
+                            </div>
                           </LabelInputContainer>
                         </FormControl>
                         <FormMessage />
