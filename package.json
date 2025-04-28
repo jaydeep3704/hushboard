@@ -19,14 +19,19 @@
     "@tabler/icons-react": "^3.31.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.9.2",
     "input-otp": "^1.4.2",
+    "localtunnel": "^1.8.3",
     "lucide-react": "^0.501.0",
-    "motion": "^12.7.4",
+    "motion": "^12.9.2",
     "next": "15.2.4",
+    "prisma": "^6.6.0",
+    "radix-ui": "^1.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-element-to-jsx-string": "^17.0.0",
     "react-hook-form": "^7.56.1",
+    "svix": "^1.64.1",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.5",
     "zod": "^3.24.3"
@@ -39,7 +44,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
-    "prisma": "^6.6.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

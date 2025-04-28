@@ -6,10 +6,9 @@ const isProtectedRoute = createRouteMatcher(['boards/(.*)', '/messages(.*)']);
 const isAuthPage = createRouteMatcher(["/signin(.*)", "/signup(.*)"]);
 
 
-export default clerkMiddleware(async (auth, req) => {
 
-  
-
+export default clerkMiddleware(
+  async (auth, req) => {
   // If user is signed in and tries to access /signin or /signup, redirect
   if ((await auth()).userId && isAuthPage(req)) {
     const url = new URL("/", req.url);
