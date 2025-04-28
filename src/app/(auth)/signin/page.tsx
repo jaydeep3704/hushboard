@@ -23,7 +23,6 @@ const page = () => {
   const [loading,setLoading]=useState(false)
   const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
 
-  const { isLoaded, setActive, signUp } = useSignUp()
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -107,8 +106,8 @@ const page = () => {
                             <div className='relative'>
                               <Input className='' type={item.label === "Password" ? showPassword ? "text" : "password" : item.label} placeholder={item.placeholder} id={item.id} {...field} />
                               {item.label === "Password" && (
-                                <button className='absolute right-3 top-2 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
-                                  {showPassword ? <EyeOff className='text-white/70' /> : <Eye className='text-white/70' />}
+                                <button className='absolute right-3 top-3 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
+                                  {showPassword ? <EyeOff className='text-white/70 size-5' /> : <Eye className='text-white/70 size-5' />}
                                 </button>
                               )}
                             </div>
