@@ -18,14 +18,14 @@ import Loader from '@/components/Loader'
 const page = () => {
 
   
-  const {signIn}=useSignIn()
+  const {signIn,isLoaded,setActive}=useSignIn()
   const [error,setError]=useState('')
   const [loading,setLoading]=useState(false)
   const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
 
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const router=useRouter()
   const form = useForm({
     defaultValues: {
       email: '',
@@ -35,11 +35,44 @@ const page = () => {
     resolver: zodResolver(SigninSchema)
   })
 
-  const onSubmit = (data: { email: string, password: string }) => {
+  const onSubmit = async (data: {email:string,password:string}) => {
+    setLoading(true)
+    if(!isLoaded){
+      return;
+    }
+    try {
+      const result=await signIn.create({
+        identifier:data.email,
+        password:data.password
+      })  
 
-    console.log(data)
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.push("/boards"); // redirect after login
+      } else {
+        console.log(result);
+      }
+    } 
+    catch (error:any) {
+      setError(error.errors[0]?.message || "Something went wrong");
+      const clerkErrors = error.errors || [];
+
+      clerkErrors.forEach((error: any) => {
+        switch (error.code) {
+          case "form_identifier_not_found":
+            form.setError("email", { message: "No account found with this email." });
+            break;
+          case "form_password_incorrect":
+            form.setError("password", { message: "Incorrect password." });
+            break;
+          default:
+            form.setError("email", { message: error.message || "Something went wrong." });
+            break;
+        }
+      });
+    }
+    setLoading(false)
   }
-
 
    const handleGoogleAuth = async (e:any) => {
     
