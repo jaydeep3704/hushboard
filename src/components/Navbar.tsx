@@ -39,7 +39,7 @@ const Navbar = () => {
     setScrollVal( latest)
   })
   return (
-    <section className='py-10 px-[4%] fixed top-0 z-100 left-0 right-0'>
+    <section className='py-10 px-[4%] fixed top-0 z-70 left-0 right-0'>
 
 
       <div className={twMerge('p-4 flex justify-between  mx-auto items-center max-w-5xl',scrollVal>0.05 && 'p-4 rounded-xl bg-secondary-foreground/70 backdrop-blur-sm transition ease-in-out border border-white/15 ' )}>

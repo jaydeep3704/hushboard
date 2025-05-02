@@ -1135,21 +1135,18 @@ export namespace Prisma {
     id: string | null
     email: string | null
     username: string | null
-    isAcceptingMessages: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
     email: string | null
     username: string | null
-    isAcceptingMessages: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     email: number
     username: number
-    isAcceptingMessages: number
     _all: number
   }
 
@@ -1158,21 +1155,18 @@ export namespace Prisma {
     id?: true
     email?: true
     username?: true
-    isAcceptingMessages?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
     username?: true
-    isAcceptingMessages?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
     username?: true
-    isAcceptingMessages?: true
     _all?: true
   }
 
@@ -1252,7 +1246,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages: boolean
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1276,7 +1269,6 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     username?: boolean
-    isAcceptingMessages?: boolean
     boards?: boolean | User$boardsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1286,24 +1278,21 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     username?: boolean
-    isAcceptingMessages?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
     username?: boolean
-    isAcceptingMessages?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
     username?: boolean
-    isAcceptingMessages?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "username" | "isAcceptingMessages", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "username", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     boards?: boolean | User$boardsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
@@ -1322,7 +1311,6 @@ export namespace Prisma {
       id: string
       email: string
       username: string
-      isAcceptingMessages: boolean
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1751,7 +1739,6 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
-    readonly isAcceptingMessages: FieldRef<"User", 'Boolean'>
   }
     
 
@@ -2233,6 +2220,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    isAcceptingMessages: boolean | null
   }
 
   export type BoardMaxAggregateOutputType = {
@@ -2242,6 +2230,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    isAcceptingMessages: boolean | null
   }
 
   export type BoardCountAggregateOutputType = {
@@ -2251,6 +2240,7 @@ export namespace Prisma {
     userId: number
     createdAt: number
     updatedAt: number
+    isAcceptingMessages: number
     _all: number
   }
 
@@ -2270,6 +2260,7 @@ export namespace Prisma {
     userId?: true
     createdAt?: true
     updatedAt?: true
+    isAcceptingMessages?: true
   }
 
   export type BoardMaxAggregateInputType = {
@@ -2279,6 +2270,7 @@ export namespace Prisma {
     userId?: true
     createdAt?: true
     updatedAt?: true
+    isAcceptingMessages?: true
   }
 
   export type BoardCountAggregateInputType = {
@@ -2288,6 +2280,7 @@ export namespace Prisma {
     userId?: true
     createdAt?: true
     updatedAt?: true
+    isAcceptingMessages?: true
     _all?: true
   }
 
@@ -2384,6 +2377,7 @@ export namespace Prisma {
     userId: string
     createdAt: Date
     updatedAt: Date
+    isAcceptingMessages: boolean
     _count: BoardCountAggregateOutputType | null
     _avg: BoardAvgAggregateOutputType | null
     _sum: BoardSumAggregateOutputType | null
@@ -2412,6 +2406,7 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isAcceptingMessages?: boolean
     messages?: boolean | Board$messagesArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | BoardCountOutputTypeDefaultArgs<ExtArgs>
@@ -2424,6 +2419,7 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isAcceptingMessages?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["board"]>
 
@@ -2434,6 +2430,7 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isAcceptingMessages?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["board"]>
 
@@ -2444,9 +2441,10 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isAcceptingMessages?: boolean
   }
 
-  export type BoardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["board"]>
+  export type BoardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "userId" | "createdAt" | "updatedAt" | "isAcceptingMessages", ExtArgs["result"]["board"]>
   export type BoardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     messages?: boolean | Board$messagesArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2472,6 +2470,7 @@ export namespace Prisma {
       userId: string
       createdAt: Date
       updatedAt: Date
+      isAcceptingMessages: boolean
     }, ExtArgs["result"]["board"]>
     composites: {}
   }
@@ -2903,6 +2902,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Board", 'String'>
     readonly createdAt: FieldRef<"Board", 'DateTime'>
     readonly updatedAt: FieldRef<"Board", 'DateTime'>
+    readonly isAcceptingMessages: FieldRef<"Board", 'Boolean'>
   }
     
 
@@ -4471,8 +4471,7 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
-    username: 'username',
-    isAcceptingMessages: 'isAcceptingMessages'
+    username: 'username'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4484,7 +4483,8 @@ export namespace Prisma {
     slug: 'slug',
     userId: 'userId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    isAcceptingMessages: 'isAcceptingMessages'
   };
 
   export type BoardScalarFieldEnum = (typeof BoardScalarFieldEnum)[keyof typeof BoardScalarFieldEnum]
@@ -4538,13 +4538,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4573,6 +4566,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4596,7 +4596,6 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     username?: StringFilter<"User"> | string
-    isAcceptingMessages?: BoolFilter<"User"> | boolean
     boards?: BoardListRelationFilter
     messages?: MessageListRelationFilter
   }
@@ -4605,7 +4604,6 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     username?: SortOrder
-    isAcceptingMessages?: SortOrder
     boards?: BoardOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
   }
@@ -4617,7 +4615,6 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    isAcceptingMessages?: BoolFilter<"User"> | boolean
     boards?: BoardListRelationFilter
     messages?: MessageListRelationFilter
   }, "id" | "email" | "username">
@@ -4626,7 +4623,6 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     username?: SortOrder
-    isAcceptingMessages?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -4639,7 +4635,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     username?: StringWithAggregatesFilter<"User"> | string
-    isAcceptingMessages?: BoolWithAggregatesFilter<"User"> | boolean
   }
 
   export type BoardWhereInput = {
@@ -4652,6 +4647,7 @@ export namespace Prisma {
     userId?: StringFilter<"Board"> | string
     createdAt?: DateTimeFilter<"Board"> | Date | string
     updatedAt?: DateTimeFilter<"Board"> | Date | string
+    isAcceptingMessages?: BoolFilter<"Board"> | boolean
     messages?: MessageListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -4663,6 +4659,7 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isAcceptingMessages?: SortOrder
     messages?: MessageOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
   }
@@ -4677,6 +4674,7 @@ export namespace Prisma {
     userId?: StringFilter<"Board"> | string
     createdAt?: DateTimeFilter<"Board"> | Date | string
     updatedAt?: DateTimeFilter<"Board"> | Date | string
+    isAcceptingMessages?: BoolFilter<"Board"> | boolean
     messages?: MessageListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "slug">
@@ -4688,6 +4686,7 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isAcceptingMessages?: SortOrder
     _count?: BoardCountOrderByAggregateInput
     _avg?: BoardAvgOrderByAggregateInput
     _max?: BoardMaxOrderByAggregateInput
@@ -4705,6 +4704,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Board"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Board"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Board"> | Date | string
+    isAcceptingMessages?: BoolWithAggregatesFilter<"Board"> | boolean
   }
 
   export type MessageWhereInput = {
@@ -4776,7 +4776,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
     boards?: BoardCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
   }
@@ -4785,7 +4784,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
     boards?: BoardUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
   }
@@ -4794,7 +4792,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     boards?: BoardUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
   }
@@ -4803,7 +4800,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -4812,21 +4808,18 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardCreateInput = {
@@ -4834,6 +4827,7 @@ export namespace Prisma {
     slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
     messages?: MessageCreateNestedManyWithoutBoardInput
     user: UserCreateNestedOneWithoutBoardsInput
   }
@@ -4845,6 +4839,7 @@ export namespace Prisma {
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
     messages?: MessageUncheckedCreateNestedManyWithoutBoardInput
   }
 
@@ -4853,6 +4848,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUpdateManyWithoutBoardNestedInput
     user?: UserUpdateOneRequiredWithoutBoardsNestedInput
   }
@@ -4864,6 +4860,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUncheckedUpdateManyWithoutBoardNestedInput
   }
 
@@ -4874,6 +4871,7 @@ export namespace Prisma {
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
   }
 
   export type BoardUpdateManyMutationInput = {
@@ -4881,6 +4879,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardUncheckedUpdateManyInput = {
@@ -4890,6 +4889,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MessageCreateInput = {
@@ -4968,11 +4968,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type BoardListRelationFilter = {
     every?: BoardWhereInput
     some?: BoardWhereInput
@@ -4997,21 +4992,18 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     username?: SortOrder
-    isAcceptingMessages?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     username?: SortOrder
-    isAcceptingMessages?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     username?: SortOrder
-    isAcceptingMessages?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -5030,14 +5022,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -5062,6 +5046,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -5074,6 +5063,7 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isAcceptingMessages?: SortOrder
   }
 
   export type BoardAvgOrderByAggregateInput = {
@@ -5087,6 +5077,7 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isAcceptingMessages?: SortOrder
   }
 
   export type BoardMinOrderByAggregateInput = {
@@ -5096,6 +5087,7 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isAcceptingMessages?: SortOrder
   }
 
   export type BoardSumOrderByAggregateInput = {
@@ -5130,6 +5122,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type BoardScalarRelationFilter = {
@@ -5202,10 +5202,6 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type BoardUpdateManyWithoutUserNestedInput = {
@@ -5286,6 +5282,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type MessageUpdateManyWithoutBoardNestedInput = {
@@ -5374,11 +5374,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -5407,14 +5402,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -5424,6 +5411,11 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -5467,11 +5459,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type BoardCreateWithoutUserInput = {
     name: string
     slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
     messages?: MessageCreateNestedManyWithoutBoardInput
   }
 
@@ -5481,6 +5482,7 @@ export namespace Prisma {
     slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
     messages?: MessageUncheckedCreateNestedManyWithoutBoardInput
   }
 
@@ -5546,6 +5548,7 @@ export namespace Prisma {
     userId?: StringFilter<"Board"> | string
     createdAt?: DateTimeFilter<"Board"> | Date | string
     updatedAt?: DateTimeFilter<"Board"> | Date | string
+    isAcceptingMessages?: BoolFilter<"Board"> | boolean
   }
 
   export type MessageUpsertWithWhereUniqueWithoutUserInput = {
@@ -5606,7 +5609,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
     messages?: MessageCreateNestedManyWithoutUserInput
   }
 
@@ -5614,7 +5616,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -5654,7 +5655,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUpdateManyWithoutUserNestedInput
   }
 
@@ -5662,7 +5662,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -5671,6 +5670,7 @@ export namespace Prisma {
     slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
     user: UserCreateNestedOneWithoutBoardsInput
   }
 
@@ -5681,6 +5681,7 @@ export namespace Prisma {
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
   }
 
   export type BoardCreateOrConnectWithoutMessagesInput = {
@@ -5692,7 +5693,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
     boards?: BoardCreateNestedManyWithoutUserInput
   }
 
@@ -5700,7 +5700,6 @@ export namespace Prisma {
     id: string
     email: string
     username: string
-    isAcceptingMessages?: boolean
     boards?: BoardUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -5725,6 +5724,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     user?: UserUpdateOneRequiredWithoutBoardsNestedInput
   }
 
@@ -5735,6 +5735,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUpsertWithoutMessagesInput = {
@@ -5752,7 +5753,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     boards?: BoardUpdateManyWithoutUserNestedInput
   }
 
@@ -5760,7 +5760,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
-    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -5770,6 +5769,7 @@ export namespace Prisma {
     slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    isAcceptingMessages?: boolean
   }
 
   export type MessageCreateManyUserInput = {
@@ -5785,6 +5785,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUpdateManyWithoutBoardNestedInput
   }
 
@@ -5794,6 +5795,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUncheckedUpdateManyWithoutBoardNestedInput
   }
 
@@ -5803,6 +5805,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isAcceptingMessages?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MessageUpdateWithoutUserInput = {

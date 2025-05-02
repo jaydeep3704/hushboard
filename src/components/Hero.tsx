@@ -11,7 +11,7 @@ const Hero = () => {
 
 
     return (
-        <section className='py-28 px-[4%] '>
+        <section className='py-28 md:pt-40 px-[4%] '>
             <div className=' mx-auto  flex md:flex-row flex-col-reverse  w-full  md:w-5xl  md:justify-between items-center gap-20  '>
                 <div className='w-full md:w-1/2  flex flex-col items-center md:items-start'>
                     <div className='flex flex-col gap-6  '>

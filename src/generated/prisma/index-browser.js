@@ -120,8 +120,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  username: 'username',
-  isAcceptingMessages: 'isAcceptingMessages'
+  username: 'username'
 };
 
 exports.Prisma.BoardScalarFieldEnum = {
@@ -130,7 +129,8 @@ exports.Prisma.BoardScalarFieldEnum = {
   slug: 'slug',
   userId: 'userId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isAcceptingMessages: 'isAcceptingMessages'
 };
 
 exports.Prisma.MessageScalarFieldEnum = {
