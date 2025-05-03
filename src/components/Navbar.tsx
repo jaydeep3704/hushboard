@@ -16,16 +16,16 @@ const Navbar = () => {
     },
     {
     label: "Messages",
-    href: "messages"
+    href: "/messages"
   },
   {
     label: "Boards",
-    href: "boards"
+    href: "/boards"
   },
   
   {
     label: "Settings",
-    href: "settings"
+    href: "/settings"
   }
   ]
 
