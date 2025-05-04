@@ -33,6 +33,7 @@ import { twMerge } from 'tailwind-merge';
 import { Button } from '@/components/ui/button';
 import Loader from '@/components/Loader';
 import { useRouter } from 'next/navigation';
+import exportFromJSON from 'export-from-json'
 
 interface Board {
   name: string;
@@ -207,8 +208,8 @@ const Page = () => {
                                 <DropdownMenuSubTrigger>Export Messages As</DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
                                   <DropdownMenuSubContent className="bg-secondary-foreground">
-                                    <DropdownMenuItem>CSV</DropdownMenuItem>
-                                    <DropdownMenuItem>JSON</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={()=>exportFromJSON({data:messages,fileName:`${slug}-messages`,exportType:'csv'})}>CSV</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={()=>exportFromJSON({data:messages,fileName:`${slug}-messages`,exportType:'json'})}>JSON</DropdownMenuItem>
                                   </DropdownMenuSubContent>
                                 </DropdownMenuPortal>
                               </DropdownMenuSub>

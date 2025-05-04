@@ -23,6 +23,7 @@
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "export-from-json": "^1.7.4",
     "framer-motion": "^12.9.2",
     "input-otp": "^1.4.2",
     "localtunnel": "^1.8.3",
