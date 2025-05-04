@@ -62,7 +62,7 @@ const Page = () => {
     return () => {
       if (intervalId) clearInterval(intervalId); // Clear on unmount
     };
-  }, [board_slug, isLoaded, session]);
+  }, [board_slug, isLoaded]);
   
 
   

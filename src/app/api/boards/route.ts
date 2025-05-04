@@ -61,6 +61,9 @@ export async function GET(req: NextRequest) {
      const boards=await prisma.board.findMany({
         where:{
             userId
+        },
+        include:{
+            messages:true
         }
      })
 

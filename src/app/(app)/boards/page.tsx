@@ -3,7 +3,7 @@ import { IconPlus } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, EllipsisVertical, MessageSquareIcon, SaveIcon, Trash2Icon, X } from 'lucide-react';
+import { ArrowRight, EllipsisVertical, MessageSquareIcon, SaveIcon, Trash2, Trash2Icon, X } from 'lucide-react';
 import axios from "axios";
 import {
   DropdownMenu,
@@ -49,6 +49,8 @@ const Page = () => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [showAlertDialog, setShowAlertDialog] = useState(false)
+  const [deletingBoardInfo, setDeletingBoardInfo] = useState<Board | null>(null)
 
   const onCreateBoard = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,6 +86,29 @@ const Page = () => {
     }
     setIsLoading(false);
   };
+
+  const onBoardDelete = async () => {
+
+    if (deletingBoardInfo) {
+      const { slug, id } = deletingBoardInfo
+      try {
+        const response = await axios.delete(`/api/boards/${slug}/delete`)
+        const data = await response.data
+        const updatedBoards = boards.filter((board) => board.id !== id);
+        setBoards(updatedBoards)
+        setInputs(updatedBoards.map((board: Board) => board.name));
+        console.log(data)
+      } catch (error) {
+        console.log("Error : ", error)
+      }
+    }
+    else {
+      console.log("deleting Board info is null")
+    }
+    setDeletingBoardInfo(null)
+    setShowAlertDialog(false)
+  }
+
 
   const onBoardNameSave = async (boardName: string, index: number, slug: string) => {
     setEditingBoardId(null);  // Reset the editing state after saving
@@ -154,25 +179,23 @@ const Page = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
                               <DropdownMenuItem onClick={() => setEditingBoardId(id)}>Edit Board Name</DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem >
                                 <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <div className="flex w-full justify-between">
-                                      Delete Board<Trash2Icon className="text-red-500" />
+                                  <AlertDialogTrigger onClick={() => {
+                                    setShowAlertDialog(true)
+                                    setDeletingBoardInfo({
+                                      id,
+                                      slug,
+                                      name,
+                                      messages
+                                    })
+                                  }} asChild>
+                                    <div className='w-full flex  gap-3 justify-between items-center' >
+                                      Delete Board
+                                      <Trash2 className=' cursor-pointer' />
                                     </div>
                                   </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete your board and all of its messages.
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction>Continue</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
+
                                 </AlertDialog>
                               </DropdownMenuItem>
                             </DropdownMenuGroup>
@@ -208,6 +231,24 @@ const Page = () => {
           </div>
         </div>
       </div>
+
+      {showAlertDialog &&
+        <AlertDialog open={showAlertDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your message
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setShowAlertDialog(false)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction className='bg-accent hover:bg-accent/70' onClick={onBoardDelete} >Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      }
+
 
       {showAddBoard && (
         <div className="w-screen px-[4%] h-full fixed z-80 flex justify-center items-center top-0 left-0 bg-black/10 backdrop-blur-sm">

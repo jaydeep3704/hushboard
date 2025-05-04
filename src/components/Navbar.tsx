@@ -23,10 +23,7 @@ const Navbar = () => {
     href: "/boards"
   },
   
-  {
-    label: "Settings",
-    href: "/settings"
-  }
+ 
   ]
 
   const session=useSession()

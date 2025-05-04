@@ -23,7 +23,7 @@ export default function Home() {
     },
     {
       question: "Can I delete messages or responses I receive?",
-      answer: "Currently, once a message is sent to you, it cannot be deleted. However, you can choose not to read or respond to any message that makes you uncomfortable."
+      answer: "Yes you can delete messages or responses that you recieve."
     },
     {
       question: "Is there a limit to how many messages I can receive?",
