@@ -25,6 +25,12 @@ const Page = () => {
     try {
       const response = await axios.post("/api/messages", { slug, username, content })
       const data = await response.data
+      if(response.status==200){
+        toast.success("Message sent sucessfully")
+      }
+      else{
+        toast.error("Some error occured while sending message . wait for some time or try again")
+      }
       console.log(data)
     } catch (error: any) {
       console.log("Error :", error)
@@ -82,7 +88,7 @@ const Page = () => {
       </div>
 
       <div className='max-w-4xl mx-auto py-10'>
-        <h3 className='md:text-xl text-lg  text-center'>Some messages you would like to send</h3>
+        <h3 className='md:text-xl text-lg  text-center'>Not sure what to say? Here's a spark</h3>
         <p className='text-white/50 text-xs md:text-sm text-center mt-3'>Click on one of the message below to copy it to your input</p>
         <div className='flex flex-col gap-3 mt-5'>
           
