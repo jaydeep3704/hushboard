@@ -11,6 +11,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import '@/app/globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { Toaster } from 'sonner'
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -33,6 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+      <Toaster richColors/>
           <Navbar/>
           <div className='py-20 '>
           {children}

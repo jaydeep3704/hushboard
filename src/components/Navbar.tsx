@@ -36,7 +36,7 @@ const Navbar = () => {
     setScrollVal( latest)
   })
   return (
-    <section className='py-10 px-[4%] fixed top-0 z-70 left-0 right-0'>
+    <section className='py-5 md:py-10 px-[4%] fixed top-0 z-70 left-0 right-0'>
 
 
       <div className={twMerge('p-4 flex justify-between  mx-auto items-center max-w-5xl',scrollVal>0.05 && 'p-4 rounded-xl bg-secondary-foreground/70 backdrop-blur-sm transition ease-in-out border border-white/15 ' )}>
@@ -55,7 +55,7 @@ const Navbar = () => {
           </Link>
           :
           
-            <button className='hover:opacity-70 transition bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  ' onClick={async()=>{
+            <button className='hover:opacity-70 transition bg-accent py-1.5 px-5 md:py-2 md:px-8 rounded-full text-primary cursor-pointer shimmer-effect  md:text-md text-sm' onClick={async()=>{
               await signOut()  
             }}>Sign Out</button>
           

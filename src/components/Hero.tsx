@@ -11,7 +11,7 @@ const Hero = () => {
 
 
     return (
-        <section className='py-28 md:pt-40 px-[4%] '>
+        <section className='py-20 md:pt-40 px-[4%] '>
             <div className=' mx-auto  flex md:flex-row flex-col-reverse  w-full  md:w-5xl  md:justify-between items-center gap-20  '>
                 <div className='w-full md:w-1/2  flex flex-col items-center md:items-start'>
                     <div className='flex flex-col gap-6  '>
@@ -46,8 +46,8 @@ const Hero = () => {
                             delay: 1,
                         }}
                     >
-                        <button className='py-2 px-8 rounded-md bg-accent text-primary font-semibold text-sm md:text-md'>Generate Your Link</button>
-                        <a href="#how-it-works" className="py-2 px-8 rounded-md bg-secondary-foreground font-semibold border border-white/15 text-sm md:text-md cursor-pointer inline-block">
+                        <button className='py-1.5 px-4 md:y-2 md:px-8 rounded-md bg-accent text-primary font-semibold text-sm md:text-md'>Generate Your Link</button>
+                        <a href="#how-it-works" className="py-1.5 px-4  md:py-2  md:px-8 rounded-md bg-secondary-foreground font-semibold border border-white/15 text-sm md:text-md cursor-pointer inline-block">
                             See How It Works
                         </a>
 

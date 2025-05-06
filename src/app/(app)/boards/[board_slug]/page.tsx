@@ -6,7 +6,7 @@ import { CopyIcon, Trash2 } from 'lucide-react'
 import { useSession } from '@clerk/nextjs'
 import axios from "axios"
 import Loader from '@/components/Loader'
-
+import { toast } from 'sonner'
 
 import {
   AlertDialog,
@@ -77,26 +77,33 @@ const onDeleteMessage=async (id:string,slug:string)=>{
       console.log(data)
       if(response.status===200){
          setMessages(()=>messages.filter((message)=>message.id!==id))
+         toast.success("Message deleted sucessfully")
       }
     } catch (error:any) {
         console.log("Error : ",error)
+        toast.error("Error while deleting message")
     }
 }
 
   return (
-    <section className='py-24 md:px-0 px-[4%]'>
-      <h1 className='text-center text-3xl'>
+    <section className='py-16 md:py-24 md:px-0 px-[4%]'>
+      <h1 className='text-center md:text-3xl text-2xl capitalize'>
         {board_slug ? board_slug.split("-").join(" ") : "Board not found"}
       </h1>
       <div className='max-w-4xl mx-auto'>
         <div className='flex items-center justify-between px-5 rounded-full my-10 bg-secondary-foreground py-2'>
           <input
             type="text"
-            className='outline-none pr-5 w-full'
+            className='outline-none pr-5 w-full md:text-md text-sm'
             disabled
             value={url}
           />
-          <CopyIcon className='size-5 cursor-pointer' onClick={() => window.navigator.clipboard.writeText(url)} />
+          <CopyIcon className='size-5 cursor-pointer' onClick={() =>
+            {
+              window.navigator.clipboard.writeText(url)
+              toast.success("URL copied !")
+            }
+            } />
         </div>
         <div>
           {loading ? <BoardLoader /> :messages.length > 0 ?
@@ -105,10 +112,10 @@ const onDeleteMessage=async (id:string,slug:string)=>{
                 messages.map((message:Message) => {
                   return (
                     <div className='w-full py-3 px-10 rounded-md bg-secondary-foreground flex justify-between' key={message.id}>
-                      <p>{message.content}</p>
+                      <p className='md:text-md text-sm'>{message.content}</p>
 
                       <AlertDialog>
-                        <AlertDialogTrigger><Trash2 className=' cursor-pointer' /></AlertDialogTrigger>
+                        <AlertDialogTrigger><Trash2 className=' cursor-pointer md:size-5 size-4' /></AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

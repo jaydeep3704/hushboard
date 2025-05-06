@@ -2,7 +2,7 @@ import { clerkMiddleware ,createRouteMatcher} from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 
-const isProtectedRoute = createRouteMatcher(['boards/(.*)', '/messages(.*)']);
+const isProtectedRoute = createRouteMatcher(['/boards(.*)', '/messages(.*)']);
 const isAuthPage = createRouteMatcher(["/signin(.*)", "/signup(.*)"]);
 
 

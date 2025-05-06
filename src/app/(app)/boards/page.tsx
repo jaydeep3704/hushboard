@@ -3,8 +3,9 @@ import { IconPlus } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { Card, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, EllipsisVertical, MessageSquareIcon, SaveIcon, Trash2, Trash2Icon, X } from 'lucide-react';
+import { EllipsisVertical, MessageSquareIcon, SaveIcon, Trash2, X } from 'lucide-react';
 import axios from "axios";
+import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -60,7 +61,7 @@ const Page = () => {
 
       const result = await axios.post("/api/boards/", { boardName: inputText });
       const response = await result.data;
-      console.log(response);
+      toast.success("Board Created !")
       fetchBoards();
     } catch (error: any) {
       console.log("Error: ", error.response.data);
@@ -95,12 +96,16 @@ const Page = () => {
       try {
         const response = await axios.delete(`/api/boards/${slug}/delete`)
         const data = await response.data
+        if(response.status==200){
         const updatedBoards = boards.filter((board) => board.id !== id);
         setBoards(updatedBoards)
         setInputs(updatedBoards.map((board: Board) => board.name));
-        console.log(data)
-      } catch (error) {
+        toast.success(data.message)
+        }
+      } catch (error:any) {
         console.log("Error : ", error)
+        const message = error?.response?.data?.error || "Something went wrong";
+        toast.error(message);
       }
     }
     else {
@@ -116,9 +121,16 @@ const Page = () => {
     try {
       const result = await axios.post(`/api/boards/${boardName}/edit`, { newBoardName: inputs[index], slug });
       const response = result.data;
-      console.log(response);
-    } catch (error) {
-      console.log("Error while editing board Name :", error);
+      if(result.status==200){
+        toast.success("Board Name Updated")
+      }
+      else{
+        toast.error("Error while updating board name")
+      }
+    } catch (error:any) {
+      console.log("Error : ", error)
+      const message = error?.result?.data?.error || "Something went wrong";
+      toast.error(message);
     }
   };
 
@@ -139,13 +151,13 @@ const Page = () => {
   }
 
   return (
-    <section className="w-screen">
-      <div className="max-w-5xl mx-auto my-24">
-        <h1 className="text-4xl md:text-5xl text-center">Your Boards</h1>
+    <section className="py-14 md:py-24 px-[4%] md:px-0">
+      <div className="max-w-5xl mx-auto ">
+        <h1 className="text-3xl md:text-5xl text-center">Your Boards</h1>
 
-        <div className="my-10 px-[4%]">
+        <div className="my-10 ">
           <button
-            className="flex items-center justify-center gap-6 py-2 rounded-xl md:text-lg text-primary-foreground bg-accent px-10 font-semibold hover:opacity-70 transition cursor-pointer"
+            className="flex items-center justify-center gap-6 md:py-2 md:rounded-xl md:text-lg text-primary-foreground bg-accent md:px-10 font-semibold hover:opacity-70 transition cursor-pointer py-1.5 px-5 rounded-lg text-md"
             onClick={() => setShowAddBoard(true)}
           >
             Add a Board <IconPlus className="size-5" />
@@ -159,7 +171,7 @@ const Page = () => {
                 const boardName = inputs[index];
                 return (
                   <Card className="bg-secondary-foreground p-5 md:h-[200px] cursor-pointer" key={id}>
-                    <CardTitle className="text-xl flex items-center justify-between gap-5">
+                    <CardTitle className="text-md md:text-xl flex items-center justify-between gap-5">
                       <input
                         type="text"
                         value={boardName && boardNameTrimmer(boardName)}
@@ -213,19 +225,19 @@ const Page = () => {
                                   </DropdownMenuSubContent>
                                 </DropdownMenuPortal>
                               </DropdownMenuSub>
-                              <DropdownMenuItem>Clear all messages</DropdownMenuItem>
+                         
                             </DropdownMenuGroup>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       )}
                     </CardTitle>
                     <CardContent className="flex flex-col">
-                      <div className="flex items-center gap-5">
-                        <MessageSquareIcon />
+                      <div className="flex items-center gap-5 text-sm">
+                        <MessageSquareIcon className='size-5'/>
                         <span className="text-white/50">{messages?.length || 0} Messages</span>
                       </div>
                     </CardContent>
-                    <CardFooter><Button variant={'accent'} onClick={() => router.push(`boards/${slug}`)}>View Messages</Button></CardFooter>
+                    <CardFooter><Button variant={'accent'} className=''onClick={() => router.push(`boards/${slug}`)}>View Messages</Button></CardFooter>
                   </Card>
                 );
               })}
@@ -255,7 +267,7 @@ const Page = () => {
         <div className="w-screen px-[4%] h-full fixed z-80 flex justify-center items-center top-0 left-0 bg-black/10 backdrop-blur-sm">
           <div className="w-full md:w-4/10 p-5 md:p-10 bg-primary rounded-xl z-90 border border-white/15 flex flex-col gap-5">
             <div className="flex justify-between items-center">
-              <h3 className="text-md text-white/50">Enter a name that best describes your board</h3>
+              <h3 className="text-sm md:text-md text-white/50">Enter a name that best describes your board</h3>
               <X className="size-5 cursor-pointer" onClick={() => setShowAddBoard(false)} />
             </div>
             <Input

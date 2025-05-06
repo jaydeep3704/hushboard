@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-export async function DELETE({params}:{params:{board_slug:string}}){
+export async function DELETE(req:NextRequest,{params}:{params:{board_slug:string}}){
 
      const {userId}=await auth()
-     const slug=params.board_slug
-     console.log(slug,userId)
+    const {board_slug}=await params 
+
      if(!userId){
         return NextResponse.json({error:"User not authenticated"},{status:401})
      }
      try {
         const existingBoard=await prisma.board.findUnique({
             where:{
-                slug,
+                slug:board_slug,
                 userId
             }
         })
@@ -25,7 +25,7 @@ export async function DELETE({params}:{params:{board_slug:string}}){
         const boardDeleted=await prisma.board.delete({
             where:{
                 id:existingBoard.id,
-                slug
+                slug:board_slug
             }
         })
 

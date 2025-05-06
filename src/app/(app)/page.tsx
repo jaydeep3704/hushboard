@@ -43,7 +43,7 @@ export default function Home() {
       <HowItWorks />
       <AnimatedTestimonialsDemo />
 
-      <section className="py-20 px-[4%]">
+      <section className="py-14 md:py-20 px-[4%]">
         <div className="max-w-5xl mx-auto"> 
         <h1 className="text-4xl md:text-6xl text-center">Frequently Asked Questions</h1>
         <Accordion type="single" collapsible className="mt-10">
@@ -51,8 +51,8 @@ export default function Home() {
           faq.map((item,index)=>{
             return (
               <AccordionItem value={`item-${index}`} key={item.question}>
-              <AccordionTrigger className="md:text-xl text-lg">{item.question}</AccordionTrigger>
-              <AccordionContent className="md:text-md text-sm">
+              <AccordionTrigger className="md:text-xl text-md">{item.question}</AccordionTrigger>
+              <AccordionContent className="md:text-md text-xs">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>
