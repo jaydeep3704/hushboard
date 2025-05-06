@@ -87,7 +87,7 @@ const Navbar = () => {
             <nav className='flex flex-col gap-5 overflow-hidden'>
               {
                 navLinks.map((link) => {
-                  return <Link href={link.href} key={link.label}>{link.label}</Link>
+                  return <Link href={link.href} key={link.label} className='text-sm'>{link.label}</Link>
                 })
               }
             </nav>

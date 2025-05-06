@@ -8,7 +8,7 @@ export async  function POST(req:NextRequest){
    
     const {userId}=await auth()
     const {newBoardName,slug}=await req.json()
-
+ 
 
     if(!userId){
       return NextResponse.json({

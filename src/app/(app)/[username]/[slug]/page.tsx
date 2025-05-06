@@ -1,30 +1,54 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { SendIcon } from 'lucide-react'
 import axios from "axios"
 import Loader from '@/components/Loader'
+import { delay, motion } from "motion/react"
+import { toast } from 'sonner'
+
 const Page = () => {
-  const { username,slug } = useParams()
+  const { username, slug } = useParams()
   const [content, setContent] = useState('')
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false)
+  const [generatedMessages, setGeneratedMessages] = useState([])
+  const[generatingMessages,setGeneratingMessages]=useState<boolean>(false)
   const onSendMessage = async (e: any) => {
     e.preventDefault()
-   
+
     setLoading(true)
-    if(!content || content.length >150){
+    if (!content || content.length > 150) {
       return;
     }
 
     try {
-        const response=await axios.post("/api/messages",{slug,username,content})
-        const data=await response.data
-        console.log(data)
-    } catch (error:any) {
-        console.log("Error :",error)
+      const response = await axios.post("/api/messages", { slug, username, content })
+      const data = await response.data
+      console.log(data)
+    } catch (error: any) {
+      console.log("Error :", error)
     }
     setLoading(false)
+  }
+
+  useEffect(() => {
+    generateMessages()
+  }, [])
+
+  const generateMessages = async () => {
+    setGeneratingMessages(true)
+    try {
+      const response = await axios.post("/api/gemini-generate-messages", { slug })
+      if (response.status == 200) {
+        const data = await response.data
+        const messages = await data.generatedMessages.split("||")
+        setGeneratedMessages(messages)
+      }
+    } catch (error) {
+      console.log("Error :", error)
+    }
+    setGeneratingMessages(false)
   }
 
   return (
@@ -52,11 +76,50 @@ const Page = () => {
           onClick={onSendMessage}
         >
           {
-            loading ? <Loader/> :  <span className='flex items-center gap-3'> Send Message <SendIcon className='size-5' /></span>
+            loading ? <Loader /> : <span className='flex items-center gap-3'> Send Message <SendIcon className='size-5' /></span>
           }
-        
-         
         </button>
+      </div>
+
+      <div className='max-w-4xl mx-auto py-10'>
+        <h3 className='md:text-xl text-lg  text-center'>Some messages you would like to send</h3>
+        <p className='text-white/50 text-xs md:text-sm text-center mt-3'>Click on one of the message below to copy it to your input</p>
+        <div className='flex flex-col gap-3 mt-5'>
+          
+          { !generatingMessages ?
+             generatedMessages.length > 0 && (
+              generatedMessages.map((message: string, messageIndex) => (
+                <motion.p
+                  key={messageIndex}
+                  className="py-2 bg-secondary-foreground border px-5 rounded-md my-2 md:text-md text-sm cursor-pointer"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: messageIndex * 0.8 }}
+                  onClick={()=>{
+                    setContent(message)
+                    toast.success("Message copied to input")
+                  }}
+                >
+                  {message.split(" ").map((word, wordIndex) => (
+                    <motion.span
+                      key={`${messageIndex}-${wordIndex}`}
+                      initial={{ opacity: 0 ,backdropFilter:"blur(10px)"}}
+                      animate={{ opacity: 1 ,backdropFilter:"blur(0px)"}}
+                      transition={{ delay: messageIndex * 1 + wordIndex * 0.04 }}
+                    >
+                      {" " + word + " "}
+                    </motion.span>
+                  ))}
+                </motion.p>
+              ))
+            ):
+            (<div className='flex flex-col gap-3 items-center py-20'>
+               <h3 className='text-center md:text-lg text-md'>Generating Messages Please Wait ....</h3>
+               <Loader/>
+            </div>)
+          }
+        </div>
+
       </div>
     </section>
   )
