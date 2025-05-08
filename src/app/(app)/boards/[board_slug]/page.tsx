@@ -20,7 +20,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-
+import {motion} from "motion/react"
 import { Message } from '@/generated/prisma'
 
 
@@ -109,9 +109,11 @@ const onDeleteMessage=async (id:string,slug:string)=>{
           {loading ? <BoardLoader /> :messages.length > 0 ?
             (<div className='mt-5 flex flex-col gap-5'>
               {
-                messages.map((message:Message) => {
+                messages.map((message:Message,index) => {
                   return (
-                    <div className='w-full py-3 px-10 rounded-md bg-secondary-foreground flex justify-between' key={message.id}>
+                    <motion.div 
+                     initial={{opacity:0,y:50,backdropFilter:"blur(20px)"}} animate={{opacity:100,y:0,backdropFilter:"blur(0px)"}} transition={{duration:0.4,delay:0.04*index,ease:"easeIn"}}
+                    className='w-full py-3 px-10 rounded-md bg-secondary-foreground flex justify-between' key={message.id}>
                       <p className='md:text-md text-sm'>{message.content}</p>
 
                       <AlertDialog>
@@ -129,7 +131,7 @@ const onDeleteMessage=async (id:string,slug:string)=>{
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
-                    </div>
+                    </motion.div>
                   )
                 })
               }

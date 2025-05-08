@@ -52,7 +52,7 @@ export default function Home() {
             return (
               <AccordionItem value={`item-${index}`} key={item.question}>
               <AccordionTrigger className="md:text-xl text-md">{item.question}</AccordionTrigger>
-              <AccordionContent className="md:text-md text-xs">
+              <AccordionContent className="md:text-sm text-xs">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>

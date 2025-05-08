@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash",
             contents: `I am building an anonymous feedback platform I want to to provide 4 messages/questions or feedback the  user is probable to ask on the basis of given slug ${slug} please give this messages all in one string and seperate them with "||" 
-            please give the response in this format only like 'just loved the todays session overall||great session on react 19||Whats your opinion on the management during todays event' write this using proper grammar maybe generate 2 questions and 2 feedbacks don't be unecessarily formal unless the topic is of that type
+            please give the response in this format only like 'just loved the todays session overall||great session on react 19||Whats your opinion on the management during todays event' write this using proper grammar maybe generate 2 questions and 2 feedbacks don't be unecessarily formal unless the topic is of that type properly look into the slug something creative is good
             `,
         });
         const generatedMessages=await response.text
