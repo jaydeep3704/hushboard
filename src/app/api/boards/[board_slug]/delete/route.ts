@@ -3,6 +3,14 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
 export async function DELETE(req: NextRequest, { params }: { params: { board_slug: string } }) {
+    
+  console.log("Vercel Deployment Test - Params:", params);
+  console.log("Vercel Deployment Test - Typeof Params:", typeof params);
+  console.log("Vercel Deployment Test - Params.board_slug:", params.board_slug);
+  return NextResponse.json({ message: "Vercel Deployment Test", slug: params.board_slug });
+
+
+
   const { userId } = await auth();
 
   const { board_slug } =await params;  // <-- no await here
