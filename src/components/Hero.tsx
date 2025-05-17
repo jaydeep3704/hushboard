@@ -46,7 +46,8 @@ const Hero = () => {
                             delay: 1,
                         }}
                     >
-                        <button className='py-1.5 px-4 md:y-2 md:px-8 rounded-md bg-accent text-primary font-semibold text-sm md:text-md'>Generate Your Link</button>
+                        <Link href="/boards" className='py-1.5 px-4 md:y-2 md:px-8 rounded-md bg-accent text-primary font-semibold text-sm md:text-md flex items-center'>Generate Your Link</Link>
+
                         <a href="#how-it-works" className="py-1.5 px-4  md:py-2  md:px-8 rounded-md bg-secondary-foreground font-semibold border border-white/15 text-sm md:text-md cursor-pointer inline-block">
                             See How It Works
                         </a>

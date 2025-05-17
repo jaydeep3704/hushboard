@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Loader from "@/components/Loader";
 import { motion } from "motion/react";
 import {  RefreshCw, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { User } from "@/generated/prisma";
 import { twMerge } from "tailwind-merge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Board = {
   id: number;
@@ -141,8 +141,18 @@ const page = () => {
           >Refresh <RefreshCw className={`size-3 md:size-4 ${loading && 'animate-spin'}`}/></button>
       </div>
       <div className="w-full max-w-5xl mx-auto">
-        {loading ? (
-          <Loader />
+        {loading ? 
+        (<div className="flex flex-col gap-5 mt-5">
+          {
+            Array.from({length:4}).map((_,index)=>{
+            return(
+              <MessageSkeleton key={index}/>
+            )
+          })
+          }
+        </div>
+          
+          
         ) : messages.length > 0 ? (
           <div className="mt-5 flex flex-col gap-5">
             {messages.map((message: Message, index) => {
@@ -216,4 +226,16 @@ const page = () => {
   );
 };
 
+
 export default page;
+
+
+const MessageSkeleton=()=>{
+  return(
+    <div className="p-5 w-full bg-secondary-foreground rounded-xl flex flex-col gap-2.5">
+        <Skeleton className="w-1/2 md:w-1/4 py-1.5"/>
+        <Skeleton className="w-full md:w-3/4 py-1.5 "/>
+        <Skeleton className="w-1/4 md:w-1/6 py-1.5"/>
+    </div>
+  )
+}

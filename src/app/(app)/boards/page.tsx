@@ -82,7 +82,7 @@ const Page = () => {
       const response = await result.data;
       setBoards(response);
       setInputs(response.map((board: Board) => board.name)); // Set inputs once the boards are fetched
-      console.log(response);
+    
     } catch (error: any) {
       console.log("Error: ", error.response.data);
     }
@@ -157,7 +157,7 @@ const Page = () => {
 
         <div className="my-10 ">
           <button
-            className="flex items-center justify-center gap-6 md:py-2 md:rounded-xl md:text-lg text-primary-foreground bg-accent md:px-10 font-semibold hover:opacity-70 transition cursor-pointer py-1.5 px-5 rounded-lg text-md"
+            className="flex items-center justify-center gap-3 md:py-2 md:rounded-lg  text-primary-foreground bg-accent  font-semibold hover:opacity-70 transition cursor-pointer py-1.5 px-5 rounded-lg text-sm"
             onClick={() => setShowAddBoard(true)}
           >
             Add a Board <IconPlus className="size-5" />
@@ -237,7 +237,7 @@ const Page = () => {
                         <span className="text-white/50">{messages?.length || 0} Messages</span>
                       </div>
                     </CardContent>
-                    <CardFooter><Button variant={'accent'} className=''onClick={() => router.push(`boards/${slug}`)}>View Messages</Button></CardFooter>
+                    <CardFooter><Button variant={"accent"} onClick={() => router.push(`boards/${slug}`)}>View Messages</Button></CardFooter>
                   </Card>
                 );
               })}

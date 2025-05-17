@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { CopyIcon, Trash2 } from 'lucide-react'
+import { CopyIcon, RefreshCcw, Trash2 } from 'lucide-react'
 import { useSession } from '@clerk/nextjs'
 import axios from "axios"
 import Loader from '@/components/Loader'
 import { toast } from 'sonner'
+import { Switch } from '@/components/ui/switch'
 
 import {
   AlertDialog,
@@ -29,17 +30,14 @@ const Page = () => {
   const params = useParams()
   const board_slug = params.board_slug as string
   const { session,isLoaded } = useSession()
-
+  const [isAcceptingMessages,setIsAcceptingMessages]=useState<boolean>(true)
  
   const [boardInfo, setBoardInfo] = useState<any>(null)
   const [messages,setMessages]=useState<Message []>([])
   const [loading, setLoading] = useState(false)
   const baseURL = "http://localhost:3000"
   const [url, setUrl] = useState("")
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-  
-    const fetchBoardInfo = async () => {
+  const fetchBoardInfo = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`/api/boards/${board_slug}/messages`);
@@ -51,10 +49,39 @@ const Page = () => {
       }
       setLoading(false);
     };
+
   
+  const getAcceptingMessages=async ()=>{
+    try {
+       const response=await axios.get(`/api/boards/${board_slug}/is-accepting-messages`)
+       const data=await response.data
+       setIsAcceptingMessages(data.isAcceptingMessages)
+    } catch (error) {
+       toast.error("Error fetching accepting messages status")  
+    }
+  }
+
+  const setAcceptingMessages=async ()=>{
+    try {
+      const response=await axios.post(`/api/boards/${board_slug}/is-accepting-messages`,{isAcceptingMessages:!isAcceptingMessages})
+      const data=await response.data
+      console.log(data)
+      if(response.status==200){
+          setIsAcceptingMessages(!isAcceptingMessages)
+          toast.success("Accepting Messages is set to "+(!isAcceptingMessages ? 'active' : 'inactive'))
+      }
+    } catch (error) {
+      toast.error("Some Error occured ! Please try again later")
+    }
+  }
+
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
     if (board_slug) {
       fetchBoardInfo(); // Initial fetch
-      intervalId = setInterval(fetchBoardInfo, 300000); // Repeat every 5 minutes
+      getAcceptingMessages();
+      intervalId = setInterval(fetchBoardInfo, 120000); // Repeat every 5 minutes
     }
   
     if (isLoaded && session) {
@@ -100,11 +127,31 @@ const onDeleteMessage=async (id:string,slug:string)=>{
           />
           <CopyIcon className='size-5 cursor-pointer' onClick={() =>
             {
-              window.navigator.clipboard.writeText(url)
-              toast.success("URL copied !")
+              if (navigator.clipboard) {
+              navigator.clipboard.writeText(url).then(() => {
+                toast.success("URL copied !")
+              }).catch(err => {
+                toast.error("Error copying URL try selecting the url")
+              });
+            } else {
+              console.log("Clipboard API is not available.");
+            }
+            
             }
             } />
         </div>
+        
+          <div className='flex items-center gap-5 -mt-3'>
+            Accept Messages 
+            <Switch onCheckedChange={setAcceptingMessages} checked={isAcceptingMessages}/>
+          </div>
+           
+        
+        <div className='flex justify-center mt-5'>
+          <button className='cursor-pointer flex items-center gap-3 bg-secondary-foreground py-1 px-3 rounded-md border border-white/15' onClick={fetchBoardInfo}>
+          Refresh <RefreshCcw className='size-4'/></button>
+        </div>    
+
         <div>
           {loading ? <BoardLoader /> :messages.length > 0 ?
             (<div className='mt-5 flex flex-col gap-5'>
@@ -117,7 +164,7 @@ const onDeleteMessage=async (id:string,slug:string)=>{
                       <p className='md:text-md text-sm'>{message.content}</p>
 
                       <AlertDialog>
-                        <AlertDialogTrigger><Trash2 className=' cursor-pointer md:size-5 size-4' /></AlertDialogTrigger>
+                        <AlertDialogTrigger className='absolute top-3 right-3'><Trash2 className=' cursor-pointer md:size-5 size-4' /></AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

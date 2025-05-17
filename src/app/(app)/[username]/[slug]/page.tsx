@@ -14,13 +14,28 @@ const Page = () => {
   const [loading, setLoading] = useState(false)
   const [generatedMessages, setGeneratedMessages] = useState([])
   const[generatingMessages,setGeneratingMessages]=useState<boolean>(false)
+  const [userAcceptingMessages,setUserAcceptingMessages]=useState<boolean>(true)
+
   const onSendMessage = async (e: any) => {
     e.preventDefault()
 
     setLoading(true)
-    if (!content || content.length > 150) {
+    if (!content) {
+      setLoading(false)
+      toast.error("Message should not be empty")
       return;
     }
+    else if(content.length>150){
+      setLoading(false)
+      return
+    }
+    getAcceptingMessages()
+    if(!userAcceptingMessages){
+      setLoading(false)
+      return toast.error("User is currently not accepting any messages")
+    }
+    
+
 
     try {
       const response = await axios.post("/api/messages", { slug, username, content })
@@ -40,6 +55,7 @@ const Page = () => {
 
   useEffect(() => {
     generateMessages()
+    getAcceptingMessages()
   }, [])
 
   const generateMessages = async () => {
@@ -55,6 +71,16 @@ const Page = () => {
       console.log("Error :", error)
     }
     setGeneratingMessages(false)
+  }
+
+  const getAcceptingMessages=async ()=>{
+    try {
+       const response=await axios.get(`/api/boards/${slug}/is-accepting-messages`)
+       const data=await response.data
+       await setUserAcceptingMessages(data.isAcceptingMessages)
+    } catch (error) {
+       toast.error("Error fetching accepting messages status")  
+    }
   }
 
   return (
