@@ -15,29 +15,29 @@ datasource db {
 }
 
 model User {
-  id                  String    @id // Clerk user ID
-  email               String    @unique
-  username            String    @unique
-  boards              Board[] // Boards created by the user
-  messages            Message[] // Messages created by the user
-  isAcceptingMessages Boolean   @default(true)
+  id       String    @id // Clerk user ID
+  email    String    @unique
+  username String    @unique
+  boards   Board[] // Boards created by the user
+  messages Message[] // Messages created by the user
 }
 
 model Board {
-  id        Int       @id @default(autoincrement()) // Unique board ID
-  name      String // Name of the board (e.g., feedback, questions, etc.)
-  messages  Message[] // Related messages for the board
-  slug      String    @unique
-  userId    String // The Clerk user ID of the user who created the board
-  user      User      @relation(fields: [userId], references: [id]) // Relation to the user who created the board
-  createdAt DateTime  @default(now()) // Timestamp when the board is created
-  updatedAt DateTime  @updatedAt // Timestamp when the board is last updated
+  id                  Int       @id @default(autoincrement()) // Unique board ID
+  name                String // Name of the board (e.g., feedback, questions, etc.)
+  messages            Message[] // Related messages for the board
+  slug                String    @unique
+  userId              String // The Clerk user ID of the user who created the board
+  user                User      @relation(fields: [userId], references: [id]) // Relation to the user who created the board
+  createdAt           DateTime  @default(now()) // Timestamp when the board is created
+  updatedAt           DateTime  @updatedAt // Timestamp when the board is last updated
+  isAcceptingMessages Boolean   @default(true)
 }
 
 model Message {
   id        String   @id @default(cuid())
   boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   content   String
   userId    String
   user      User     @relation(fields: [userId], references: [id])

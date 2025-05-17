@@ -37,7 +37,7 @@ model Board {
 model Message {
   id        String   @id @default(cuid())
   boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id],onDelete: Cascade)
   content   String
   userId    String
   user      User     @relation(fields: [userId], references: [id])

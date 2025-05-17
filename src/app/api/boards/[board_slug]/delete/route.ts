@@ -5,7 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 export async function DELETE(req: NextRequest, { params }: { params: { board_slug: string } }) {
   const { userId } = await auth();
 
-  const { board_slug } =await params;  
+  const { board_slug } =await params;  // <-- no await here
 
   if (!userId) {
     return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
