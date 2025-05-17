@@ -2,7 +2,7 @@ import { NextRequest,NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 
-export async function POST(req:NextRequest,{params}:{params:{board_slug:string}}){
+export async function POST(req:NextRequest,{params}:{ params: Promise<{ board_slug: string }> }){
     const {userId}=await auth()
     const {board_slug}=params
     const {isAcceptingMessages}=await req.json()

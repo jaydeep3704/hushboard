@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 
 
-export async function GET(req: NextRequest, { params }: { params: { board_slug: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ board_slug: string }> }) {
   const { board_slug } = await params
   const { userId } = await auth()
   
