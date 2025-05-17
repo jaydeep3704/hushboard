@@ -58,8 +58,8 @@ export async function POST(req:NextRequest,{params}:{ params: Promise<{ board_sl
 }
 
 
-export async function GET(req: NextRequest, { params }: { params: { board_slug: string } }) {
-  const { board_slug } = params;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ board_slug: string }> }) {
+  const { board_slug } =await params;
   console.log(board_slug)
   try {
     const board = await prisma.board.findUnique({
