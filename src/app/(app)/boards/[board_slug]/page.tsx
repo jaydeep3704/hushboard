@@ -35,7 +35,7 @@ const Page = () => {
   const [boardInfo, setBoardInfo] = useState<any>(null)
   const [messages,setMessages]=useState<Message []>([])
   const [loading, setLoading] = useState(false)
-  const baseURL = "http://localhost:3000"
+  const baseURL = process.env.DOMAIN
   const [url, setUrl] = useState("")
   const fetchBoardInfo = async () => {
       setLoading(true);
