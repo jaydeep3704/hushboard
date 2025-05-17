@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req:NextRequest,{params}:{ params: Promise<{ board_slug: string }> }){
     const {userId}=await auth()
-    const {board_slug}=params
+    const {board_slug}=await params
     const {isAcceptingMessages}=await req.json()
     if(!userId){
       return NextResponse.json({
