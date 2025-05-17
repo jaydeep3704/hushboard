@@ -91,7 +91,7 @@ const Page = () => {
     return () => {
       if (intervalId) clearInterval(intervalId); // Clear on unmount
     };
-  }, [board_slug, isLoaded,fetchBoardInfo,session,getAcceptingMessages]);
+  }, [board_slug, isLoaded]);
   
 
   
