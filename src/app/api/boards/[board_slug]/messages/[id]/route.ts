@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ board_slug: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params:Promise<{ board_slug:string,id: string }> }) {
   const { board_slug,id } = await params
   const { userId } = await auth()
   
