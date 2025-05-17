@@ -35,7 +35,7 @@ const Page = () => {
   const [boardInfo, setBoardInfo] = useState<any>(null)
   const [messages,setMessages]=useState<Message []>([])
   const [loading, setLoading] = useState(false)
-  const baseURL = process.env.DOMAIN
+  const baseURL = process.env.NEXT_PUBLIC_DOMAIN
   const [url, setUrl] = useState("")
   const fetchBoardInfo = async () => {
       setLoading(true);
