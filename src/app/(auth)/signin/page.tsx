@@ -116,7 +116,7 @@ const page = () => {
   return (
     <section className='w-full min-h-screen h-full flex justify-center items-center z-1'>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='z-100 bg-secondary-foreground/60 p-8 rounded-lg border border-white/15 m-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='z-100 bg-card/60 p-8 rounded-lg border border-white/15 m-4'>
           <div className='text-center'>
             <h1 className='text-3xl'>Welcome to HushBoard</h1>
             <p className='text-md mt-3 text-white/50'>Login to continue</p>

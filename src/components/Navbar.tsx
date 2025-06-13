@@ -41,7 +41,7 @@ const Navbar = () => {
 
 
       <div className={twMerge('p-4 flex justify-between  mx-auto items-center max-w-5xl',scrollVal>0.05 && 'p-4 rounded-xl bg-background/70 backdrop-blur-sm transition ease-in-out border border-neutral-400/20  shadow-sm'  )}>
-        <h1 className='text-lg'>HushBoard</h1>
+        <h1 className='text-xl font-semibold'>HushBoard</h1>
         <nav className='md:flex gap-10 hidden'>
           {
             navLinks.map((link) => {
@@ -84,7 +84,7 @@ const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="overflow-hidden bg-secondary-foreground/70 rounded-xl p-[4%] mt-5 backdrop-blur-sm border border-white/15 md:hidden"
+            className="overflow-hidden bg-card/70 shadow-md  rounded-xl p-[4%] mt-5 backdrop-blur-sm border border-white/15 md:hidden"
           >
 
 

@@ -67,7 +67,7 @@ const HowItWorks = () => {
                     {
                         cardInfo.map((card) => {
                             return (
-                                <Card className='p-8 hiw-card' key={card.title}  >
+                                <Card className='p-8 hiw-card hover:scale-105 transition-all' key={card.title}  >
                                     <CardTitle className='text-lg md:text-2xl flex justify-between items-center'  >{card.title}  <motion.span >{card.icon} </motion.span> </CardTitle>
                                     <CardDescription className='text-sm md:text-md'>{card.description}</CardDescription>
                                 </Card>
