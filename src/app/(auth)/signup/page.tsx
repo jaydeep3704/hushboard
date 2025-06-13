@@ -19,7 +19,7 @@ import Loader from '@/components/Loader'
 const page = () => {
 
   const { isLoaded, setActive, signUp } = useSignUp()
-  const {signIn}=useSignIn()
+  const { signIn } = useSignIn()
   const [error, setError] = useState("")
   const [code, setCode] = useState("")
   const [pendingVerification, setPendingVerification] = useState<Boolean>(false)
@@ -72,25 +72,24 @@ const page = () => {
           setError(err.message);
         }
       });
-    
+
     }
     setIsLoading(false)
   }
-  const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
+  const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false)
 
 
-  const handleGoogleAuth = async (e:any) => {
-    
+  const handleGoogleAuth = async (e: any) => {
+
     e.preventDefault()
     setIsGoogleSignInLoading(true)
     try {
       await signIn?.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/boards',
-        
+        redirectUrl: 'https://hushboard.vercel.app/sso-callback',      // ✅ full URL
+        redirectUrlComplete: 'https://hushboard.vercel.app/boards',
       });
-    
+
     } catch (err) {
       console.error('Google Auth Error:', err);
     }
@@ -160,7 +159,7 @@ const page = () => {
                               <Input className='' type={(item.label === "Password" || item.label === "Confirm Password") ? (showPassword ? "text" : "password") : item.type} placeholder={item.placeholder} id={item.id} {...field} />
                               {(item.label === "Password" || item.label === "Confirm Password") && (
                                 <button className='absolute right-3 top-3 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
-                                  {showPassword ? <EyeOff className='text-white/70 size-5' /> : <Eye className='text-white/70 size-5' />}                              
+                                  {showPassword ? <EyeOff className='text-white/70 size-5' /> : <Eye className='text-white/70 size-5' />}
                                 </button>
                               )}
                             </div>
@@ -194,10 +193,10 @@ const page = () => {
 
           <div className='mt-5'>
             <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out' onClick={handleGoogleAuth}>
-            {!isGoogleSignInLoading?
-             <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span>:
-              <Loader/>
-            }
+              {!isGoogleSignInLoading ?
+                <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span> :
+                <Loader />
+              }
             </button>
           </div>
 
