@@ -6,7 +6,8 @@ import { twMerge } from 'tailwind-merge'
 import { AnimatePresence, motion } from "motion/react"
 import { useScroll,useMotionValueEvent } from 'motion/react'
 import { useAuth } from "@clerk/nextjs";
-
+import { Button } from './ui/button'
+import ThemeToggle from './ThemeToggle'
 const Navbar = () => {
 
   const navLinks = [
@@ -39,8 +40,8 @@ const Navbar = () => {
     <section className='py-5 md:py-10 px-[4%] fixed top-0 z-70 left-0 right-0'>
 
 
-      <div className={twMerge('p-4 flex justify-between  mx-auto items-center max-w-5xl',scrollVal>0.05 && 'p-4 rounded-xl bg-secondary-foreground/70 backdrop-blur-sm transition ease-in-out border border-white/15 ' )}>
-        <span className='text-lg'>HushBoard</span>
+      <div className={twMerge('p-4 flex justify-between  mx-auto items-center max-w-5xl',scrollVal>0.05 && 'p-4 rounded-xl bg-background/70 backdrop-blur-sm transition ease-in-out border border-neutral-400/20  shadow-sm'  )}>
+        <h1 className='text-lg'>HushBoard</h1>
         <nav className='md:flex gap-10 hidden'>
           {
             navLinks.map((link) => {
@@ -51,13 +52,15 @@ const Navbar = () => {
         <div className='flex gap-5 items-center'>
 
          { !session.isSignedIn ? <Link href={'/signin'}>
-            <button className='hover:opacity-70 transition bg-accent py-2 px-8 rounded-full text-primary cursor-pointer shimmer-effect  '>Sign In</button>
+            <Button className='rounded-full'>Sign In</Button>
           </Link>
           :
           
-            <button className='hover:opacity-70 transition bg-accent py-1.5 px-5 md:py-2 md:px-8 rounded-full text-primary cursor-pointer shimmer-effect  md:text-md text-sm' onClick={async()=>{
+            <Button 
+            className='rounded-full'
+            onClick={async()=>{
               await signOut()  
-            }}>Sign Out</button>
+            }}>Sign Out</Button>
           
       }
 
@@ -69,6 +72,7 @@ const Navbar = () => {
             <line x1="3" y1="12" x2="21" y2="12" className={twMerge("transition", showMenu && "opacity-0")}></line>
             <line x1="3" y1="18" x2="21" y2="18" className={twMerge("origin-left transition", showMenu && "-rotate-45  translate-y-1")}></line>
           </svg>
+        <ThemeToggle/>
         </div>
           
       </div>

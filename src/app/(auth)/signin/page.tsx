@@ -17,15 +17,15 @@ import { useRouter } from 'next/navigation'
 import Loader from '@/components/Loader'
 const page = () => {
 
-  
-  const {signIn,isLoaded,setActive}=useSignIn()
-  const [error,setError]=useState('')
-  const [loading,setLoading]=useState(false)
-  const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
+
+  const { signIn, isLoaded, setActive } = useSignIn()
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false)
 
 
   const [showPassword, setShowPassword] = useState(false);
-  const router=useRouter()
+  const router = useRouter()
   const form = useForm({
     defaultValues: {
       email: '',
@@ -35,16 +35,16 @@ const page = () => {
     resolver: zodResolver(SigninSchema)
   })
 
-  const onSubmit = async (data: {email:string,password:string}) => {
+  const onSubmit = async (data: { email: string, password: string }) => {
     setLoading(true)
-    if(!isLoaded){
+    if (!isLoaded) {
       return;
     }
     try {
-      const result=await signIn.create({
-        identifier:data.email,
-        password:data.password
-      })  
+      const result = await signIn.create({
+        identifier: data.email,
+        password: data.password
+      })
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
@@ -52,8 +52,8 @@ const page = () => {
       } else {
         console.log(result);
       }
-    } 
-    catch (error:any) {
+    }
+    catch (error: any) {
       setError(error.errors[0]?.message || "Something went wrong");
       const clerkErrors = error.errors || [];
 
@@ -74,18 +74,18 @@ const page = () => {
     setLoading(false)
   }
 
-   const handleGoogleAuth = async (e:any) => {
-    
+  const handleGoogleAuth = async (e: any) => {
+
     e.preventDefault()
     setIsGoogleSignInLoading(true)
     try {
       await signIn?.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/boards',
-        
+        redirectUrl: 'https://hushboard.vercel.app/sso-callback',      // ✅ full URL
+        redirectUrlComplete: 'https://hushboard.vercel.app/boards',
+
       });
-    
+
     } catch (err) {
       console.error('Google Auth Error:', err);
     }
@@ -157,9 +157,9 @@ const page = () => {
 
             <button className='hover:opacity-70 transition ease-in-out py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>
               {
-              loading ? <Loader/>: <span className='flex items-center justify-center gap-5'>Sign In  <ArrowRight className='size-4' /></span>
+                loading ? <Loader /> : <span className='flex items-center justify-center gap-5'>Sign In  <ArrowRight className='size-4' /></span>
               }
-              </button>
+            </button>
           </div>
 
           <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
@@ -170,10 +170,10 @@ const page = () => {
 
           <div className='mt-5'>
             <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out' onClick={handleGoogleAuth}>
-            {!isGoogleSignInLoading?
-             <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span>:
-              <Loader/>
-            }
+              {!isGoogleSignInLoading ?
+                <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span> :
+                <Loader />
+              }
             </button>
           </div>
 

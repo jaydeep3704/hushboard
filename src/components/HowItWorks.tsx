@@ -60,14 +60,14 @@ const HowItWorks = () => {
 
     }, [isInView,animate])
     return (
-        <section className='py-10 md:py-24   mt-10  px-[4%] ' id='how-it-works' ref={scope}>
+        <section className='h-screen  mt-10  px-[4%] flex items-center' id='how-it-works' ref={scope}>
             <div className='max-w-5xl mx-auto'>
                 <h1 className='md:text-6xl text-4xl text-center md:text-start'>How It Works?</h1>
                 <div className='grid grid-cols-1 md:grid-cols-3  md:justify-evenly gap-5 md:gap-10   mt-8'>
                     {
                         cardInfo.map((card) => {
                             return (
-                                <Card className='bg-secondary-foreground p-5  md:h-[200px] hiw-card' key={card.title}  >
+                                <Card className='p-8 hiw-card' key={card.title}  >
                                     <CardTitle className='text-lg md:text-2xl flex justify-between items-center'  >{card.title}  <motion.span >{card.icon} </motion.span> </CardTitle>
                                     <CardDescription className='text-sm md:text-md'>{card.description}</CardDescription>
                                 </Card>

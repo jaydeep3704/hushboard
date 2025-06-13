@@ -7,6 +7,7 @@ import axios from "axios"
 import Loader from '@/components/Loader'
 import { delay, motion } from "motion/react"
 import { toast } from 'sonner'
+import { Textarea } from '@/components/ui/textarea'
 
 const Page = () => {
   const { username, slug } = useParams()
@@ -89,7 +90,7 @@ const Page = () => {
         <h1 className='text-center text-lg md:text-2xl'>Send Message to {username}</h1>
 
         <div className='mt-5'>
-          <textarea
+          <Textarea
             name="content"
             id="content"
             className='w-full p-5 outline-none rounded-xl border border-white/15'
@@ -115,7 +116,7 @@ const Page = () => {
 
       <div className='max-w-4xl mx-auto py-10'>
         <h3 className='md:text-xl text-lg  text-center'>Not sure what to say? Here's a spark</h3>
-        <p className='text-white/50 text-xs md:text-sm text-center mt-3'>Click on one of the message below to copy it to your input</p>
+        <p className='text-muted-foreground text-xs md:text-sm text-center mt-3'>Click on one of the message below to copy it to your input</p>
         <div className='flex flex-col gap-3 mt-5'>
           
           { !generatingMessages ?
@@ -123,7 +124,7 @@ const Page = () => {
               generatedMessages.map((message: string, messageIndex) => (
                 <motion.p
                   key={messageIndex}
-                  className="py-2 bg-secondary-foreground border px-5 rounded-md my-2 md:text-md text-sm cursor-pointer"
+                  className="py-2 bg-card border px-5 rounded-md my-2 md:text-md text-sm cursor-pointer"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: messageIndex * 0.8 }}

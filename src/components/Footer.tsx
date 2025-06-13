@@ -41,11 +41,11 @@ const Footer = () => {
         <div className='grid max-w-5xl mx-auto md:grid-cols-4 justify-between grid-cols-2 gap-10'>
             <div className='font-semibold text-lg'>
                 HushBoard
-                <p className='text-sm text-white/50 font-medium mt-2'>Speak freely. Stay anonymous.</p>
+                <p className='text-sm text-muted-foreground'>Speak freely. Stay anonymous.</p>
             </div>
             <div>
                 <h3 className='text-md'>Sitemap</h3>
-                <ul className='flex flex-col text-sm text-white/50' >
+                <ul className='flex flex-col text-sm text-muted-foreground' >
                     {
                         sitemap.map((link)=><Link href={link.path} key={link.title}>{link.title}</Link>)
                     }
@@ -56,7 +56,7 @@ const Footer = () => {
 
                 <div>
                     <h3 className='text-md'>Contact</h3>
-                     <p className='text-white/50 text-sm'>
+                     <p className='text-muted-foreground text-sm'>
                         hushtechnologies@gmail.com
                      </p>
                 </div>
@@ -72,7 +72,7 @@ const Footer = () => {
                     </div>
                 </div>
         </div>
-                <p className='mt-10 text-center'>Made with ❤️ by <Link href={"https://github.com/jaydeep3704"}>Jaydeep Patil </Link></p>
+                <p className='mt-10 text-center'>Made  by <Link href={"https://github.com/jaydeep3704"}>Jaydeep Patil </Link></p>
     </section>
   )
 }

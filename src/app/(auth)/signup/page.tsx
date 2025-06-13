@@ -79,18 +79,18 @@ const page = () => {
   const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
 
 
-  const handleGoogleAuth = async (e:any) => {
-    
+  const handleGoogleAuth = async (e: any) => {
+
     e.preventDefault()
     setIsGoogleSignInLoading(true)
     try {
       await signIn?.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/boards',
-        
+        redirectUrl: 'https://hushboard.vercel.app/sso-callback',      // ✅ full URL
+        redirectUrlComplete: 'https://hushboard.vercel.app/boards',
+
       });
-    
+
     } catch (err) {
       console.error('Google Auth Error:', err);
     }

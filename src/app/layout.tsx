@@ -4,6 +4,7 @@ import './globals.css'
 import PageLoader from '@/components/PageLoader'
 import { ClerkProvider } from '@clerk/nextjs'
 import {Toaster} from "sonner"
+import { ThemeProvider } from '@/components/theme-provider'
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -26,10 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider> 
-      <html lang="en" className='dark'>
+      <html lang="en" >
         <body className='overflow-x-hidden'>
+         <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            disableTransitionOnChange
+         >
           <PageLoader/>
           {children}
+        </ThemeProvider> 
         </body>
       </html>
     </ClerkProvider>

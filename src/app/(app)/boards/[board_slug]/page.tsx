@@ -23,6 +23,8 @@ import {
 
 import {motion} from "motion/react"
 import { Message } from '@/generated/prisma'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 
 
@@ -118,10 +120,10 @@ const onDeleteMessage=async (id:string,slug:string)=>{
         {board_slug ? board_slug.split("-").join(" ") : "Board not found"}
       </h1>
       <div className='max-w-4xl mx-auto'>
-        <div className='flex items-center justify-between px-5 rounded-full my-10 bg-secondary-foreground py-2'>
-          <input
+        <div className='flex items-center justify-between px-5 rounded-full my-10 bg-card py-2 shadow-sm'>
+          <Input
             type="text"
-            className='outline-none pr-5 w-full md:text-md text-sm'
+            className='outline-none pr-5 w-full md:text-md text-sm border-none'
             disabled
             value={url}
           />
@@ -148,8 +150,8 @@ const onDeleteMessage=async (id:string,slug:string)=>{
            
         
         <div className='flex justify-center mt-5'>
-          <button className='cursor-pointer flex items-center gap-3 bg-secondary-foreground py-1 px-3 rounded-md border border-white/15' onClick={fetchBoardInfo}>
-          Refresh <RefreshCcw className='size-4'/></button>
+          <Button className='cursor-pointer flex items-center gap-3 ' onClick={fetchBoardInfo}>
+          Refresh <RefreshCcw className='size-4'/></Button>
         </div>    
 
         <div>
@@ -160,7 +162,7 @@ const onDeleteMessage=async (id:string,slug:string)=>{
                   return (
                     <motion.div 
                      initial={{opacity:0,y:50,backdropFilter:"blur(20px)"}} animate={{opacity:100,y:0,backdropFilter:"blur(0px)"}} transition={{duration:0.4,delay:0.04*index,ease:"easeIn"}}
-                    className='w-full py-3 px-10 rounded-md bg-secondary-foreground flex justify-between' key={message.id}>
+                    className='w-full py-3 px-10 rounded-md bg-card flex justify-between shadow-sm' key={message.id}>
                       <p className='md:text-md text-sm'>{message.content}</p>
 
                       <AlertDialog>

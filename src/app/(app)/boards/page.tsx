@@ -156,12 +156,12 @@ const Page = () => {
         <h1 className="text-3xl md:text-5xl text-center">Your Boards</h1>
 
         <div className="my-10 ">
-          <button
-            className="flex items-center justify-center gap-3 md:py-2 md:rounded-lg  text-primary-foreground bg-accent  font-semibold hover:opacity-70 transition cursor-pointer py-1.5 px-5 rounded-lg text-sm"
+          <Button 
+
             onClick={() => setShowAddBoard(true)}
           >
             Add a Board <IconPlus className="size-5" />
-          </button>
+          </Button>
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
             {boards.length > 0 &&
@@ -170,7 +170,7 @@ const Page = () => {
 
                 const boardName = inputs[index];
                 return (
-                  <Card className="bg-secondary-foreground p-5 md:h-[200px] cursor-pointer" key={id}>
+                  <Card className="p-5 md:h-[200px] cursor-pointer" key={id}>
                     <CardTitle className="text-md md:text-xl flex items-center justify-between gap-5">
                       <input
                         type="text"
@@ -187,7 +187,7 @@ const Page = () => {
                           <DropdownMenuTrigger asChild>
                             <EllipsisVertical className="size-5 cursor-pointer" />
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56 bg-secondary-foreground">
+                          <DropdownMenuContent className="w-56 ">
                             <DropdownMenuLabel>{boardNameTrimmer(boardName)}</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
@@ -219,7 +219,7 @@ const Page = () => {
                               <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>Export Messages As</DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
-                                  <DropdownMenuSubContent className="bg-secondary-foreground">
+                                  <DropdownMenuSubContent >
                                     <DropdownMenuItem onClick={()=>exportFromJSON({data:messages,fileName:`${slug}-messages`,exportType:'csv'})}>CSV</DropdownMenuItem>
                                     <DropdownMenuItem onClick={()=>exportFromJSON({data:messages,fileName:`${slug}-messages`,exportType:'json'})}>JSON</DropdownMenuItem>
                                   </DropdownMenuSubContent>
@@ -234,10 +234,10 @@ const Page = () => {
                     <CardContent className="flex flex-col">
                       <div className="flex items-center gap-5 text-sm">
                         <MessageSquareIcon className='size-5'/>
-                        <span className="text-white/50">{messages?.length || 0} Messages</span>
+                        <span className="text-muted-foreground">{messages?.length || 0} Messages</span>
                       </div>
                     </CardContent>
-                    <CardFooter><Button variant={"accent"} onClick={() => router.push(`boards/${slug}`)}>View Messages</Button></CardFooter>
+                    <CardFooter><Button  onClick={() => router.push(`boards/${slug}`)}>View Messages</Button></CardFooter>
                   </Card>
                 );
               })}
@@ -256,7 +256,7 @@ const Page = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setShowAlertDialog(false)}>Cancel</AlertDialogCancel>
-              <AlertDialogAction className='bg-accent hover:bg-accent/70' onClick={onBoardDelete} >Continue</AlertDialogAction>
+              <AlertDialogAction  onClick={onBoardDelete} >Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -265,20 +265,20 @@ const Page = () => {
 
       {showAddBoard && (
         <div className="w-screen px-[4%] h-full fixed z-80 flex justify-center items-center top-0 left-0 bg-black/10 backdrop-blur-sm">
-          <div className="w-full md:w-4/10 p-5 md:p-10 bg-primary rounded-xl z-90 border border-white/15 flex flex-col gap-5">
+          <div className="w-full md:w-4/10 p-5 md:p-10  rounded-xl z-90 bg-background border border-white/15 flex flex-col gap-5">
             <div className="flex justify-between items-center">
-              <h3 className="text-sm md:text-md text-white/50">Enter a name that best describes your board</h3>
+              <h3 className="text-sm md:text-md text-muted-foreground">Enter a name that best describes your board</h3>
               <X className="size-5 cursor-pointer" onClick={() => setShowAddBoard(false)} />
             </div>
             <Input
-              className="text-white placeholder:text-white py-2.5 px-5"
+
               placeholder="Board Name Here"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
             />
 
             <Button
-              variant={"accent"}
+              variant={"secondary"}
               className="w-1/3"
               onClick={onCreateBoard}
             >
@@ -295,7 +295,7 @@ export default Page;
 
 const BoardLoader = () => {
   return (
-    <div className='w-screen h-screen flex justify-center items-center flex-col gap-5'>
+    <div className='w-screen h-[60vh] flex justify-center items-center flex-col gap-5'>
       <h3 className='text-xl md:text-3xl text-white/50 text-center'>"Organizing your boards... just a moment!"</h3>
       <Loader />
     </div>

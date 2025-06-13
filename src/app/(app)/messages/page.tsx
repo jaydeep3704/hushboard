@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { User } from "@/generated/prisma";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 type Board = {
   id: number;
@@ -135,10 +136,10 @@ const page = () => {
     <section className="py-16 md:py-24 px-[4%] md:px-0">
       <h1 className="text-center mb-5 text-xl md:text-3xl">All Messages</h1>
       <div className="max-w-5xl mx-auto flex justify-center">
-          <button
-          className="text-sm cursor-pointer flex gap-2 items-center px-5 py-2 bg-secondary-foreground rounded-lg border border-white/15"
+          <Button
+          variant={"outline"}
           onClick={fetchMessages}
-          >Refresh <RefreshCw className={`size-3 md:size-4 ${loading && 'animate-spin'}`}/></button>
+          >Refresh <RefreshCw className={`size-3 md:size-4 ${loading && 'animate-spin'}`}/></Button>
       </div>
       <div className="w-full max-w-5xl mx-auto">
         {loading ? 
@@ -176,7 +177,7 @@ const page = () => {
                     delay: 0.04 * index,
                     ease: "easeIn",
                   }}
-                  className="w-full py-3 px-5 rounded-lg bg-secondary-foreground flex justify-between items-center"
+                  className="w-full py-3 px-5 rounded-lg bg-card flex justify-between items-center shadow-sm"
                   key={message.id}
                 >
                   <div className="w-full flex flex-col gap-2">
@@ -187,7 +188,7 @@ const page = () => {
                     </Badge>
 
                     <p className="md:text-md text-sm">{message.content}</p>
-                    <p className="text-sm text-white/50">{formatDate(createdAt)}</p>
+                    <p className="text-sm text-muted-foreground">{formatDate(createdAt)}</p>
                   </div>
 
                   <AlertDialog>
@@ -204,7 +205,6 @@ const page = () => {
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                          className="bg-accent hover:bg-accent/70"
                           onClick={() => onDeleteMessage(message.id, slug)}
                         >
                           Continue
@@ -232,7 +232,7 @@ export default page;
 
 const MessageSkeleton=()=>{
   return(
-    <div className="p-5 w-full bg-secondary-foreground rounded-xl flex flex-col gap-2.5">
+    <div className="p-5 w-full bg-card rounded-xl flex flex-col gap-2.5">
         <Skeleton className="w-1/2 md:w-1/4 py-1.5"/>
         <Skeleton className="w-full md:w-3/4 py-1.5 "/>
         <Skeleton className="w-1/4 md:w-1/6 py-1.5"/>
