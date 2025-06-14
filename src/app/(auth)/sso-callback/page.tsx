@@ -8,7 +8,7 @@ export default function SSOCallbackPage() {
     signInForceRedirectUrl={"/boards"}
     signUpForceRedirectUrl={"/boards"}
     />
-    <div className="flex items-center justify-center flex-col gap-4s">
+    <div className="flex items-center justify-center flex-col gap-4">
        <Loader2 className="animate-spin"/>
        <p className="text-muted-foreground">Signing In ...</p> 
     </div>
