@@ -1,6 +1,7 @@
+"use client"
 import { AuthenticateWithRedirectCallback, useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 export default function SSOCallbackPage() {
