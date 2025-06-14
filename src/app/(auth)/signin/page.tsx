@@ -81,8 +81,8 @@ const page = () => {
     try {
       await signIn?.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: 'https://hushboard.vercel.app/sso-callback',      // ✅ full URL
-        redirectUrlComplete: 'https://hushboard.vercel.app/boards',
+        redirectUrl: '/sso-callback',      // ✅ full URL
+        redirectUrlComplete: '/boards',
       });
 
     } catch (err) {
