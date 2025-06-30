@@ -1,230 +1,168 @@
 "use client"
-import React, { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Label } from '@radix-ui/react-label'
-import { BackgroundBeams } from '@/components/ui/background-beams'
-import { twMerge } from 'tailwind-merge'
-import { ArrowRight, Eye, EyeOff } from 'lucide-react'
-import Link from 'next/link'
-import { IconBrandGoogle } from '@tabler/icons-react'
-import { useSignIn, useSignUp } from '@clerk/nextjs'
-import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { SignupSchema } from '@/zodSchema/authSchema'
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation'
-import EmailVerification from '@/components/EmailVerification'
-import Loader from '@/components/Loader'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormItem, FormLabel, FormMessage, FormField } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignupSchema } from "@/zodSchema/authSchema";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { GeneralSubmitButton } from "@/components/general/SubmitButton";
+import { OrSeperator } from "@/components/general/Seperator";
+import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import Link from "next/link";
+import { z } from "zod";
+import { AnimatedFeed } from "@/components/general/AnimatedFeed";
+import { SignUp } from "@/lib/auth/actions";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { ValidationError } from "@/lib/utils/Error";
+import { useRouter } from "next/navigation";
+export default function SignUpPage() {
 
-const page = () => {
-
-  const { isLoaded, setActive, signUp } = useSignUp()
-  const {signIn}=useSignIn()
-  const [error, setError] = useState("")
-  const [code, setCode] = useState("")
-  const [pendingVerification, setPendingVerification] = useState<Boolean>(false)
-  const [isloading, setIsLoading] = useState(false)
-  const router = useRouter()
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const form = useForm({
+  const form = useForm<z.infer<typeof SignupSchema>>({
     defaultValues: {
-      username: '',
+      username:'',
       email: '',
       password: '',
       confirmPassword: ''
     },
     resolver: zodResolver(SignupSchema)
   })
-
-  const onSubmit = async (data: { email: string, username: string, password: string, confirmPassword: string }) => {
-    const { email, username, password, confirmPassword } = data;
-    setIsLoading(true)
-    if (!isLoaded) {
-      setIsLoading(false)
-      return;
-    }
+  const [pending,setPending]=useState<boolean>(false)
+  const router=useRouter()
+  async function onSubmit(data: z.infer<typeof SignupSchema>) {
     try {
-      await signUp.create({
-        emailAddress: email,
-        password: password,
-        username: username
-      })
-      await signUp.prepareEmailAddressVerification({
-        strategy: "email_code"
-      })
-
-      setPendingVerification(true)
-    } catch (error: any) {
-      console.log(JSON.stringify(error, null, 2))
-      const clerkErrors = error.errors;
-
-      clerkErrors.forEach((err: any) => {
-        if (err.meta?.paramName === 'email_address') {
-          form.setError('email', { message: err.message });
-        }
-        else if (err.meta?.paramName === 'username') {
-          form.setError('username', { message: err.message });
-        }
-        else {
-          // general fallback
-          setError(err.message);
-        }
-      });
-    
+      setPending(true)
+      const result=await SignUp(data)
+      if(result.error && !result.success) return toast.error(result.error)
+      else if(result?.success) return router.replace(result?.redirectTo)
+    } 
+    catch (error) {
+      if(error instanceof Error && error.message!=="NEXT_REDIRECT"){
+            return toast.error("Unexpected error")
+      }
     }
-    setIsLoading(false)
+    finally{
+      setPending(false)
+    }
   }
-  const [isGoogleSignInLoading,setIsGoogleSignInLoading]=useState(false)
-
-
-  const handleGoogleAuth = async (e: any) => {
-
-    e.preventDefault()
-    setIsGoogleSignInLoading(true)
-    try {
-      await signIn?.authenticateWithRedirect({
-        strategy: 'oauth_google',
-        redirectUrl: 'https://hushboard.vercel.app/sso-callback',      // ✅ full URL
-        redirectUrlComplete: 'https://hushboard.vercel.app/boards',
-
-      });
-
-    } catch (err) {
-      console.error('Google Auth Error:', err);
-    }
-    setIsGoogleSignInLoading(false)
-  };
-
-
-
-
-
-
-  const fields = [
-    {
-      label: 'Username',
-      placeholder: 'johnDoe123',
-      type: 'text',
-      id: 'username',
-    },
-    {
-      label: 'Email',
-      placeholder: 'johndoe123@gmail.com',
-      type: 'email',
-      id: 'email'
-    },
-    {
-      label: 'Password',
-      placeholder: 'johnDoe@123',
-      type: 'password',
-      id: 'password'
-
-    },
-    {
-      label: 'Confirm Password',
-      placeholder: 'johnDoe@123',
-      type: 'password',
-      id: 'confirmPassword'
-
-    },
-
-  ]
 
 
   return (
-    <section className='w-full min-h-screen h-full flex justify-center items-center z-1'>
-      {!pendingVerification ? (<Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='z-100 bg-card/60 p-8 rounded-lg border border-white/15 m-4'>
-          <div className='text-center'>
-            <h1 className='text-3xl'>Welcome to HushBoard</h1>
-            <p className='text-md mt-3 text-white/50'>Create your account</p>
-          </div>
+    <div className="grid lg:grid-cols-5 items-center min-h-screen bg-accent dark:bg-background">
+      <div className="hidden lg:block lg:col-span-2 min-h-screen h-auto bg-accent dark:bg-background justify-center items-center">
+        <AnimatedFeed title="Join Hushboard" description={`"Because everyone has something to say."`}/>
+      </div>
+      <div className="lg:col-span-3 overflow-hidden  lg:rounded-l-4xl flex justify-center items-center min-h-screen bg-card py-5">
+        <Card className="lg:w-[500px]  w-[400px] lg:border-none border-[1px] border-primary/10 shadow-md lg:shadow-none">
+          <CardHeader>
+            <CardTitle >
+              <Link className="flex justify-center font-semibold text-2xl" href={"/"}>Welcome to HushBoard</Link>
+            </CardTitle>
+            <CardDescription className="text-center text-balance ">Create an Account</CardDescription>
+          </CardHeader>
 
-          <div className='mt-5 flex flex-col gap-5'>
-            {
-              fields.map((item) => {
-                return (
+          <CardContent className="space-y-6">
+
+            <Form {...form}>
+              <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="space-y-6">
+                  <div className="grid lg:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="font-semibold">Username</FormLabel>
+                          <Input {...field} placeholder="JohnDoe1234" />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="font-semibold">Email</FormLabel>
+                          <Input {...field} placeholder="johndoe@gmail.com" />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+
+                  </div>
+
+                <div className="grid lg:grid-cols-2 gap-4">
+
                   <FormField
-                    key={item.id}
                     control={form.control}
-                    name={item.id as "username" || "email" || "password" || "confirm_password"}
+                    name="password"
                     render={({ field }) => (
-                      <FormItem>
-
-                        <FormControl>
-                          <LabelInputContainer>
-                            <Label htmlFor={item.id}>{item.label}</Label>
-                            <div className='relative'>
-                              <Input className='' type={(item.label === "Password" || item.label === "Confirm Password") ? (showPassword ? "text" : "password") : item.type} placeholder={item.placeholder} id={item.id} {...field} />
-                              {(item.label === "Password" || item.label === "Confirm Password") && (
-                                <button className='absolute right-3 top-3 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
-                                  {showPassword ? <EyeOff className='text-white/70 size-5' /> : <Eye className='text-white/70 size-5' />}                              
-                                </button>
-                              )}
-                            </div>
-                          </LabelInputContainer>
-                        </FormControl>
+                      <FormItem className="space-y-1">
+                        <FormLabel className="font-semibold">Password</FormLabel>
+                        <Input {...field} type="password" placeholder="JohnDoe@1234" />
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
-                )
-              })
-            }
+                    />
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="font-semibold">Confirm Password</FormLabel>
+                        <Input {...field} type="password" placeholder="JohnDoe@1234" />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                    />
+                  </div>
+                </div>
+                <Button type="submit" className="w-full mt-4 flex justify-center items-center" variant="outline">
+                    {pending ? 
+                    (<Loader2 className="animate-spin"/>):
+                    (<div className="flex items-center gap-2 text-primary justify-center">
+                      Sign Up 
+                      <ArrowRight className="size-4"/>
+                    </div>) 
+                  }
+                </Button>
 
+              </form>
+            </Form>
+            <OrSeperator />
+            <div className="space-y-3">
+              <form action="">
+                <GeneralSubmitButton
+                  text="Sign in with Google"
+                  icon={<IconBrandGoogle className="size-5" />}
+                  classname="w-full text-primary"
+                  iconFirst={true}
+                  variant="outline"
 
-            <button className='py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>
-
-              {
-                isloading ? <Loader /> : (<span className='flex gap-5 items-center'>Sign Up  <ArrowRight className='size-4' />
-                </span>)
-              }
-            </button>
-            <div id="clerk-captcha"></div>
-
-          </div>
-
-          <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
-            <span className='block w-full h-[1px] bg-white/15'></span>
-            OR
-            <span className='block w-full h-[1px] bg-white/15'></span>
-          </div>
-
-          <div className='mt-5'>
-            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out' onClick={handleGoogleAuth}>
-            {!isGoogleSignInLoading?
-             <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span>:
-              <Loader/>
-            }
-            </button>
-          </div>
-
-          <p className='text-sm mt-5 text-center text-white/50'>Already have an account ? <Link href='signin' className='text-white'>
-            Log in Here</Link></p>
-        </form>
-      </Form>) :
-        <EmailVerification />
-      }
-      <BackgroundBeams className='z-2' />
-    </section>
-  )
-}
-
-export default page
-
-
-const LabelInputContainer = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={twMerge("flex w-full flex-col space-y-2", className)}>
-      {children}
+                />
+              </form>
+              <form action="">
+                <GeneralSubmitButton
+                  text="Sign in with Github"
+                  icon={<IconBrandGithub className="size-5" />}
+                  classname="w-full text-primary"
+                  variant="outline"
+                  iconFirst={true}
+                />
+              </form>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <p className="text-sm text-muted-foreground flex gap-2 justify-center w-full">
+              <span> Already have an account ?  </span>
+              <Link href={"/signin"} className="dark:text-primary/70 dark:hover:text-primary/50">Login here</Link> </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
-  );
+  )
 }

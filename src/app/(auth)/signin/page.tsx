@@ -1,204 +1,137 @@
 "use client"
-import React, { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Label } from '@radix-ui/react-label'
-import { BackgroundBeams } from '@/components/ui/background-beams'
-import { twMerge } from 'tailwind-merge'
-import { ArrowRight, Eye, EyeOff } from 'lucide-react'
-import Link from 'next/link'
-import { IconBrandGoogle } from '@tabler/icons-react'
-import { Form, FormMessage, FormItem, FormControl, FormField } from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { SigninSchema } from '@/zodSchema/authSchema'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useSignIn } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormItem, FormLabel, FormMessage, FormField } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SigninSchema } from "@/zodSchema/authSchema";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { GeneralSubmitButton } from "@/components/general/SubmitButton";
+import { OrSeperator } from "@/components/general/Seperator";
+import Link from "next/link";
+import { z } from "zod";
+import  { AnimatedFeed } from "@/components/general/AnimatedFeed";
+import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import { SignIn } from "@/lib/auth/actions";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+export default function SignInPage() {
 
-import Loader from '@/components/Loader'
-const page = () => {
-
-
-  const { signIn, isLoaded, setActive } = useSignIn()
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false)
-
-
-  const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter()
   const form = useForm({
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
     },
-
     resolver: zodResolver(SigninSchema)
   })
+  
 
-  const onSubmit = async (data: { email: string, password: string }) => {
-    setLoading(true)
-    if (!isLoaded) {
-      return;
-    }
+  const [pending,setPending]=useState<boolean>(false)
+  const router=useRouter()
+  async function onSubmit(data: z.infer<typeof SigninSchema>) {
     try {
-      const result = await signIn.create({
-        identifier: data.email,
-        password: data.password
-      })
-
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        router.push("/boards"); // redirect after login
-      } else {
-        console.log(result);
-      }
+      setPending(true)
+      const result=await SignIn(data)
+      if(!result?.success && result?.error) return toast.error(result.error)
+      else if(result.success) return router.replace(result.redirectTo)
+    } catch (error) {
+       if(error instanceof Error && error.message!=="NEXT_REDIRECT"){
+           toast.error("An unexpected error occured")
+       }
     }
-    catch (error: any) {
-      setError(error.errors[0]?.message || "Something went wrong");
-      const clerkErrors = error.errors || [];
-
-      clerkErrors.forEach((error: any) => {
-        switch (error.code) {
-          case "form_identifier_not_found":
-            form.setError("email", { message: "No account found with this email." });
-            break;
-          case "form_password_incorrect":
-            form.setError("password", { message: "Incorrect password." });
-            break;
-          default:
-            form.setError("email", { message: error.message || "Something went wrong." });
-            break;
-        }
-      });
+    finally{
+      setPending(false)
     }
-    setLoading(false)
   }
-
-  const handleGoogleAuth = async (e: any) => {
-
-    e.preventDefault()
-    setIsGoogleSignInLoading(true)
-    try {
-      await signIn?.authenticateWithRedirect({
-        strategy: 'oauth_google',
-        redirectUrl: 'https://hushboard.vercel.app/sso-callback',      // ✅ full URL
-        redirectUrlComplete: 'https://hushboard.vercel.app/boards',
-
-      });
-
-    } catch (err) {
-      console.error('Google Auth Error:', err);
-    }
-    setIsGoogleSignInLoading(false)
-  };
-
-
-
-
-
-  const fields = [
-    {
-      label: 'Email',
-      placeholder: 'johndoe123@gmail.com',
-      type: 'email',
-      id: 'email'
-    },
-    {
-      label: 'Password',
-      placeholder: 'johnDoe@123',
-      type: 'password',
-      id: 'password'
-
-    },
-  ]
 
 
   return (
-    <section className='w-full min-h-screen h-full flex justify-center items-center z-1'>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='z-100 bg-card/60 p-8 rounded-lg border border-white/15 m-4'>
-          <div className='text-center'>
-            <h1 className='text-3xl'>Welcome to HushBoard</h1>
-            <p className='text-md mt-3 text-white/50'>Login to continue</p>
-          </div>
+    <div className="grid lg:grid-cols-5 items-center min-h-screen bg-accent dark:bg-background">
+      <div className="hidden lg:block lg:col-span-2 min-h-screen h-auto bg-accent dark:bg-background justify-center items-center">
+        <AnimatedFeed title="HushBoard" description={`"Speak your mind. Stay anonymous."`}/>
+      </div>
+      <div className="lg:col-span-3 overflow-hidden  lg:rounded-l-4xl flex justify-center items-center min-h-screen bg-card">
+        <Card className="w-[400px] lg:border-none border-[1px] border-primary/10 shadow-md lg:shadow-none">
 
-          <div className='mt-5 flex flex-col gap-5'>
-            {
-              fields.map((item) => {
-                return (
+          <CardHeader>
+            <CardTitle >
+              <Link className="flex justify-center font-semibold text-2xl" href={"/"}>Welcome to HushBoard</Link>
+            </CardTitle>
+            <CardDescription className="text-center text-balance ">Login to continue</CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+
+            <Form {...form}>
+              <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="space-y-6">
                   <FormField
-                    key={item.id}
                     control={form.control}
-                    name={item.id as "email" || "password"}
+                    name="email"
                     render={({ field }) => (
-                      <FormItem>
-
-                        <FormControl>
-                          <LabelInputContainer>
-                            <Label htmlFor={item.id}>{item.label}</Label>
-                            <div className='relative'>
-                              <Input className='' type={item.label === "Password" ? showPassword ? "text" : "password" : item.label} placeholder={item.placeholder} id={item.id} {...field} />
-                              {item.label === "Password" && (
-                                <button className='absolute right-3 top-3 cursor-pointer transition' type='button' onClick={() => setShowPassword(!showPassword)}>
-                                  {showPassword ? <EyeOff className='text-white/70 size-5' /> : <Eye className='text-white/70 size-5' />}
-                                </button>
-                              )}
-                            </div>
-                          </LabelInputContainer>
-                        </FormControl>
+                      <FormItem className="space-y-1">
+                        <FormLabel className="font-semibold">Email</FormLabel>
+                        <Input {...field} placeholder="johndoe@gmail.com" />
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                )
-              })
-            }
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="font-semibold">Password</FormLabel>
+                        <Input {...field} type="password" placeholder="JohnDoe@1234" />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <Button type="submit" className="w-full mt-4 flex justify-center items-center" variant="outline">
+                    {pending ? 
+                    (<Loader2 className="animate-spin"/>):
+                    (<div className="flex items-center gap-2 text-primary justify-center">
+                      Sign In 
+                      <ArrowRight className="size-4"/>
+                    </div>) 
+                  }
+                </Button>
 
+              </form>
+            </Form>
+            <OrSeperator />
+            <div className="space-y-3">
+              <form action="">
+                <GeneralSubmitButton
+                  text="Sign in with Google"
+                  icon={<IconBrandGoogle className="size-5" />}
+                  classname="w-full text-primary"
+                  iconFirst={true}
+                  variant="outline"
 
-            <button className='hover:opacity-70 transition ease-in-out py-2 bg-accent w-full text-center text-primary rounded-md flex items-center justify-center gap-5' type='submit'>
-              {
-                loading ? <Loader /> : <span className='flex items-center justify-center gap-5'>Sign In  <ArrowRight className='size-4' /></span>
-              }
-            </button>
-          </div>
-
-          <div className='flex w-full items-center mt-5 gap-5 text-white/50'>
-            <span className='block w-full h-[1px] bg-white/15'></span>
-            OR
-            <span className='block w-full h-[1px] bg-white/15'></span>
-          </div>
-
-          <div className='mt-5'>
-            <button className='flex gap-5 items-center justify-center bg-accent/80 backdrop-blur-sm w-full py-2 rounded-md text-primary hover:opacity-70 transition ease-in-out' onClick={handleGoogleAuth}>
-              {!isGoogleSignInLoading ?
-                <span className='flex items-center gap-5'><IconBrandGoogle /> Sign in with Google</span> :
-                <Loader />
-              }
-            </button>
-          </div>
-
-          <p className='text-sm mt-5 text-center text-white/50'>Don't have an account ? <Link href='signup' className='text-white'>
-            Register Here </Link></p>
-        </form>
-        <BackgroundBeams className='z-2' />
-      </Form>
-    </section>
-  )
-}
-
-export default page
-
-
-const LabelInputContainer = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={twMerge("flex w-full flex-col space-y-2", className)}>
-      {children}
+                />
+              </form>
+              <form action="">
+                <GeneralSubmitButton
+                  text="Sign in with Github"
+                  icon={<IconBrandGithub className="size-5" />}
+                  classname="w-full text-primary"
+                  variant="outline"
+                  iconFirst={true}
+                />
+              </form>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <p className="text-sm text-muted-foreground flex gap-2 justify-center w-full">
+              <span> Don't have an account ?  </span>
+              <Link href={"/signup"} className="dark:text-primary/70 dark:hover:text-primary/50">Register here</Link> </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
-  );
+  )
 }

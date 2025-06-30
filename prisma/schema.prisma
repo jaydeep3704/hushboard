@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -15,11 +14,16 @@ datasource db {
 }
 
 model User {
-  id                  String    @id // Clerk user ID
+  id                  String    @id @default(uuid())
   email               String    @unique
   username            String    @unique
   boards              Board[] // Boards created by the user
   messages            Message[] // Messages created by the user
+  password            String 
+  salt                String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  isVerified          Boolean @default(false)
 }
 
 model Board {
