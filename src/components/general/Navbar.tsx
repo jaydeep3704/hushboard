@@ -26,8 +26,8 @@ export async function Navbar(){
   const user=await getCurrentUser()
 
   return(
-  <div>
-    <div className="max-w-7xl mx-auto py-5 flex items-center justify-between px-4">
+  <div className="bg-card sticky top-0 left-0 right-0 z-70 border-b border-primary/10">
+    <div className="max-w-7xl mx-auto py-5 flex items-center justify-between px-4 bg-card">
         <h1 className="text-2xl font-semibold">HushBoard</h1>
         <nav className="hidden md:block">
           {

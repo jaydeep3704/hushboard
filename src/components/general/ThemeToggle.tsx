@@ -17,7 +17,7 @@ export function ThemeToggle() {
   const { setTheme } = useTheme()
 
   return (
-    <DropdownMenu>
+    <DropdownMenu >
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
@@ -25,7 +25,7 @@ export function ThemeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="z-70 border border-primary/15">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
