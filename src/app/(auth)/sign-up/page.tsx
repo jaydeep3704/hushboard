@@ -305,7 +305,7 @@ export default function SignUpPage() {
               >
                 <span>Already have an account?</span>
                 <Link
-                  href={"/signin"}
+                  href={"/sign-in"}
                   className="font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent hover:from-emerald-700 hover:to-teal-700 dark:hover:from-emerald-300 dark:hover:to-teal-300 transition-all duration-200"
                 >
                   Sign in here

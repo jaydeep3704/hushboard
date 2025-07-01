@@ -4,7 +4,7 @@ import { getUserFromSession } from "./lib/auth/session";
 import { cookies } from "next/headers";
 
 const privateRoutes=["/boards"]
-const authRoutes=["/signin","/signup"]
+const authRoutes=["/sign-in","/sign-up"]
 export async function middleware(request:NextRequest){
   const response=await middlewareAuth(request) ?? NextResponse.next()
   return response;
@@ -15,7 +15,7 @@ async function middlewareAuth(request:NextRequest){
   const user=await getUserFromSession(await cookies())
   if(privateRoutes.includes(request.nextUrl.pathname)){
     if(user==null) {
-      return NextResponse.redirect(new URL('/signin',request.url))
+      return NextResponse.redirect(new URL('/sign-in',request.url))
     }
   }
   if(authRoutes.includes(request.nextUrl.pathname)){

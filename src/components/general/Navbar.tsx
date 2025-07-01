@@ -85,7 +85,7 @@ export function Navbar({ user }: currentUserProps) {
             {user ? <UserDropDown user={user} /> : (
               
                   <Link
-                    href="/signin"
+                    href="/sign-in"
                     className=" items-center justify-center gap-2 w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow hidden md:flex"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -139,7 +139,7 @@ export function Navbar({ user }: currentUserProps) {
                 {/* Sign In button in mobile only if user not logged in */}
                 {!user && (
                   <Link
-                    href="/signin"
+                    href="/sign-in"
                     className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >

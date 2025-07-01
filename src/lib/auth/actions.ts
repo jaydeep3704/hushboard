@@ -11,6 +11,8 @@ import { Resend } from "resend"
 import { OTPTemplate } from "@/components/emailTemplates/OTPTemplate"
 import { createSession, removeUserFromSession } from "./session"
 import { cookies } from "next/headers"
+import { OAuthProvider } from "@prisma/client"
+import { OAuthClient } from "@/app/(app)/boards/base"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -182,5 +184,9 @@ redirect("/")
 
 export async function Logout(){
   await removeUserFromSession(await cookies())
-  redirect("/signin")
+  redirect("/sign-in")
+}
+
+export async function oAuthSignIn(provider:OAuthProvider){
+  redirect(new OAuthClient().createAuthURL(await cookies()))
 }

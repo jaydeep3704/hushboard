@@ -2,9 +2,8 @@
 
  function BoardsPage(){
     return(
-        <div>
-            Boards
-        </div>
+        <section className="min-h-screen">
+        </section>
     )
 }
 

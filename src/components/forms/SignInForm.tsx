@@ -6,20 +6,19 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { SigninSchema } from "@/zodSchema/authSchema"
 import { Input } from "@/components/ui/input"
 import { ArrowRight, Loader2, Eye, EyeOff, Mail, Lock } from "lucide-react"
-import { GeneralSubmitButton } from "@/components/general/SubmitButton"
 import { OrSeperator } from "@/components/general/Seperator"
 import Link from "next/link"
 import type { z } from "zod"
 import { AnimatedFeed } from "@/components/general/AnimatedFeed"
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react"
-import { SignIn } from "@/lib/auth/actions"
+import { oAuthSignIn, SignIn } from "@/lib/auth/actions"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, Variants } from "framer-motion"
 
-export default function SignInPage() {
+export  function SignInForm() {
   const form = useForm({
     defaultValues: {
       email: "",
@@ -47,7 +46,7 @@ export default function SignInPage() {
     }
   }
 
-  const containerVariants:Variants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -58,7 +57,7 @@ export default function SignInPage() {
     },
   }
 
-  const itemVariants:Variants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
@@ -213,15 +212,14 @@ export default function SignInPage() {
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  <form action="">
-                    <GeneralSubmitButton
-                      text="Continue with Google"
-                      icon={<IconBrandGoogle className="w-5 h-5" />}
-                      classname="w-full py-3 text-base font-medium border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl transition-all duration-200"
-                      iconFirst={true}
-                      variant="outline"
-                    />
-                  </form>
+                  <Button className="w-full py-3 text-base font-medium border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl transition-all duration-200">
+                    <IconBrandGoogle className="size-5" onClick={
+                      async()=>{
+                        await oAuthSignIn("google")
+                      }
+                    }/>
+                    Continue with Google
+                  </Button>
                 </motion.div>
 
                 <motion.div
@@ -229,15 +227,17 @@ export default function SignInPage() {
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  <form action="">
-                    <GeneralSubmitButton
-                      text="Continue with GitHub"
-                      icon={<IconBrandGithub className="w-5 h-5" />}
-                      classname="w-full py-3 text-base font-medium border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl transition-all duration-200"
-                      variant="outline"
-                      iconFirst={true}
-                    />
-                  </form>
+                  <Button className="w-full py-3 text-base font-medium border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl transition-all duration-200"
+                   onClick={
+                      async()=>{
+                        await oAuthSignIn("github")
+                      }
+                    }
+                  >
+                    <IconBrandGithub className="size-5" />
+                    Continue with Github
+                  </Button>
+
                 </motion.div>
               </motion.div>
             </CardContent>
@@ -249,7 +249,7 @@ export default function SignInPage() {
               >
                 <span>Don't have an account?</span>
                 <Link
-                  href={"/signup"}
+                  href={"/sign-up"}
                   className="font-semibold bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent hover:from-violet-700 hover:to-purple-700 dark:hover:from-violet-300 dark:hover:to-purple-300 transition-all duration-200"
                 >
                   Create one here
