@@ -3,6 +3,7 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card"
 import { Share2, Link, MessageSquareMore, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { Variants } from "framer-motion"
+import { useRouter } from "next/navigation"
 const cardInfo = [
   {
     title: "Generate Your Link",
@@ -60,6 +61,7 @@ const HowItWorks = () => {
       },
     },
   }
+  const router=useRouter()
 
   return (
     <section
@@ -169,6 +171,7 @@ const HowItWorks = () => {
             className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={()=>router.push("/boards")}
           >
             Get Started Now
             <ArrowRight className="w-5 h-5" />

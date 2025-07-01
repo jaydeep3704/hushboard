@@ -1,24 +1,29 @@
-import { clerkMiddleware ,createRouteMatcher} from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 
+import {type NextRequest, NextResponse } from "next/server";
+import { getUserFromSession } from "./lib/auth/session";
+import { cookies } from "next/headers";
 
-const isProtectedRoute = createRouteMatcher(['/boards(.*)', '/messages(.*)']);
-const isAuthPage = createRouteMatcher(["/signin(.*)", "/signup(.*)"]);
+const privateRoutes=["/boards"]
+const authRoutes=["/signin","/signup"]
+export async function middleware(request:NextRequest){
+  const response=await middlewareAuth(request) ?? NextResponse.next()
+  return response;
+}
 
-
-
-export default clerkMiddleware(
-  async (auth, req) => {
-  // If user is signed in and tries to access /signin or /signup, redirect
-  if ((await auth()).userId && isAuthPage(req)) {
-    const url = new URL("/", req.url);
-    return NextResponse.redirect(url);
+async function middlewareAuth(request:NextRequest){
+  
+  const user=await getUserFromSession(await cookies())
+  if(privateRoutes.includes(request.nextUrl.pathname)){
+    if(user==null) {
+      return NextResponse.redirect(new URL('/signin',request.url))
+    }
   }
-
-
-  if (isProtectedRoute(req)) await auth.protect()
-
-},{signInUrl:"signin",signUpUrl:"signup"})
+  if(authRoutes.includes(request.nextUrl.pathname)){
+    if(user){
+      return NextResponse.redirect(new URL('/',request.url))
+    }  
+  }
+}
 
 
 export const config = {
