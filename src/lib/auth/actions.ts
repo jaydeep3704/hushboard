@@ -12,7 +12,7 @@ import { OTPTemplate } from "@/components/emailTemplates/OTPTemplate"
 import { createSession, removeUserFromSession } from "./session"
 import { cookies } from "next/headers"
 import { OAuthProvider } from "@prisma/client"
-import { OAuthClient } from "./core/oauth/base"
+import { getOAuthClient, OAuthClient } from "./core/oauth/base"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function SignIn(unsafeData:z.infer<typeof SigninSchema>){
@@ -185,7 +185,8 @@ export async function Logout(){
   await removeUserFromSession(await cookies())
   redirect("/sign-in")
 }
-
-export async function oAuthSignIn(provider:OAuthProvider){
-  redirect(new OAuthClient().createAuthURL(await cookies()))
+export async function oAuthSignIn(provider: OAuthProvider) {
+  const client = getOAuthClient(provider)
+  const url = client.createAuthURL(await cookies())
+  redirect(url)
 }

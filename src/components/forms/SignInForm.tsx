@@ -212,12 +212,15 @@ export  function SignInForm() {
                   whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  <Button className="w-full py-3 text-base font-medium border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl transition-all duration-200">
-                    <IconBrandGoogle className="size-5" onClick={
+                  <Button className="w-full py-3 text-base font-medium border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl transition-all duration-200"
+                  onClick={
                       async()=>{
+                        console.log("google clicked")
                         await oAuthSignIn("google")
                       }
-                    }/>
+                    }
+                  >
+                    <IconBrandGoogle className="size-5" />
                     Continue with Google
                   </Button>
                 </motion.div>

@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { NextRequest } from "next/server"
 import { redirect } from "next/navigation"
-import { OAuthClient } from "@/lib/auth/core/oauth/base"
+import { getOAuthClient } from "@/lib/auth/core/oauth/base"
 import { OAuthProvider } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import { createSession } from "@/lib/auth/session"
@@ -13,17 +13,18 @@ export async function GET(
 ) {
   const { provider: rawProvider } = await params
   const code = request.nextUrl.searchParams.get("code")
-  const state=request.nextUrl.searchParams.get("state")
+  const state = request.nextUrl.searchParams.get("state")
   const provider = z.enum(["github", "google"]).parse(rawProvider)
 
-  if (typeof code !== "string" || typeof state!=="string") {
+  if (typeof code !== "string" || typeof state !== "string") {
     redirect(
       `/sign-in?oauthError=${encodeURIComponent("Failed To Connect. Please Try Again")}`
     )
   }
 
   try {
-    const oAuthUser = await new OAuthClient().fetchUser(code, provider,state,await cookies())
+    const oAuthClient = getOAuthClient(provider)
+    const oAuthUser = await oAuthClient.fetchUser(code, state, await cookies())
     const user = await connectUserToAccount(oAuthUser, provider)
     await createSession(user, await cookies())
   } catch (error) {
@@ -36,20 +37,16 @@ export async function GET(
   redirect("/")
 }
 
+// ✅ Normalized User type from OAuth
+type OAuthUser = {
+  id: string
+  email: string
+  avatar: string
+  username: string
+}
+
 async function connectUserToAccount(
-  {
-    id,
-    email,
-    name,
-    avatar,
-    login
-  }: {
-    id: number
-    email: string
-    avatar: string | null
-    name: string | null
-    login: string
-  },
+  { id, email, avatar, username }: OAuthUser,
   provider: OAuthProvider
 ) {
   return await prisma.$transaction(async (tx) => {
@@ -59,18 +56,18 @@ async function connectUserToAccount(
     })
 
     if (!user) {
-      // ✅ First time login – create user
+      // First time login – create user
       user = await tx.user.create({
         data: {
           email,
-          username: login,
+          username,
           avatar,
-          isVerified:true
+          isVerified: true
         },
         select: { id: true, email: true, avatar: true }
       })
     } else if (avatar) {
-      // ✅ Existing user – update avatar
+      // Existing user – update avatar
       user = await tx.user.update({
         where: { id: user.id },
         data: { avatar },
@@ -78,14 +75,14 @@ async function connectUserToAccount(
       })
     }
 
-    // ✅ Safely create OAuth account without duplication
+    // Always create OAuth account (skip duplicate)
     await tx.oAuthAccount.createMany({
       data: [{
         provider,
-        providerAccountId: id.toString(),
+        providerAccountId: id,
         userId: user.id,
         avatar,
-        username: login
+        username
       }],
       skipDuplicates: true
     })
