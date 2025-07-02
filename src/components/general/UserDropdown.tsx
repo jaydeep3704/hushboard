@@ -10,7 +10,8 @@ import { Logout } from "@/lib/auth/actions";
 interface userProps{
     user?:{
         username?:string,
-        email?:string
+        email?:string,
+        avatar?:string
     }
 }
 
@@ -21,7 +22,7 @@ export default  function UserDropDown({user}:userProps){
             <DropdownMenuTrigger asChild >
                 <Button variant="ghost" className="!p-0 !h-auto hover:!bg-transparent cursor-pointer !border-none">
                 <Avatar >
-                    {/* <AvatarImage src={user} alt="profile-image" /> */}
+                    <AvatarImage src={user.avatar} alt="profile-image" />
                     <AvatarFallback><UserIcon/></AvatarFallback>
                 </Avatar>
                 <ChevronDown size={16} strokeWidth={2} className="ml-2 opacity-60"/>
@@ -32,18 +33,6 @@ export default  function UserDropDown({user}:userProps){
                     <span className="text-xs text-muted-foreground">{user.username}</span>
                     <span className="text-xs text-muted-foreground">{user.email}</span>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator/>
-                <DropdownMenuGroup>
-                    <DropdownMenuItem asChild>
-                         <Link href={"/profile"} >
-                             <UserIcon size={16} strokeWidth={2} className="opacity-60"/>
-                             <span>
-                                Profile
-                             </span>
-                         </Link>
-                    </DropdownMenuItem>
-
-                </DropdownMenuGroup>
                 <DropdownMenuSeparator/>
                  <DropdownMenuItem asChild>
                      

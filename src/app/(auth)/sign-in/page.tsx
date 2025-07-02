@@ -7,13 +7,12 @@ import Link from "next/link"
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ oAuthError?: string }>
+  searchParams: Promise<{ oauthError?: string }>
 }) {
-  const { oAuthError } = await searchParams
-
-  if (oAuthError) {
-    const decodedError = decodeURIComponent(oAuthError)
-
+  const { oauthError } = await searchParams
+  if (oauthError) {
+    const decodedError = decodeURIComponent(oauthError)
+    console.log(decodedError)
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-md">
@@ -25,14 +24,14 @@ export default async function SignInPage({
             <CardDescription className="text-red-700">There was a problem signing you in</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-md bg-red-50 p-4">
-              <p className="text-sm text-red-800">
+            <div className="rounded-md bg-red-200 p-4">
+              <p className="text-sm text-red-800 font-semibold">
                 {decodedError || "An unexpected error occurred during authentication."}
               </p>
             </div>
             <div className="flex flex-col gap-2">
-              <Button asChild className="w-full">
-                <Link href="/signin">Try Again</Link>
+              <Button asChild className="w-full bg-violet-400 hover:bg-violet-400/70">
+                <Link href="/sign-in">Try Again</Link>
               </Button>
               <Button variant="outline" asChild className="w-full bg-transparent">
                 <Link href="/" className="flex items-center gap-2">

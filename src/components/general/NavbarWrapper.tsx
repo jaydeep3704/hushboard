@@ -6,7 +6,7 @@ async function getUserData(userId: string) {
   try {
     return await prisma.user.findUnique({
       where: { id: userId },
-      select: { username: true, email: true },
+      select: { username: true, email: true ,avatar:true},
     })
   } catch (error) {
     console.error("Error fetching user data:", error)
