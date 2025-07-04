@@ -17,7 +17,7 @@ model User {
   id           String         @id @default(uuid())
   email        String         @unique
   username     String         @unique
-  boards       Board[] // Boards created by the user
+  boards       Board[] 
   messages     Message[] // Messages created by the user
   password     String?
   salt         String?
@@ -33,8 +33,8 @@ model Board {
   name                String // Name of the board (e.g., feedback, questions, etc.)
   messages            Message[] // Related messages for the board
   slug                String    @unique
-  userId              String // The Clerk user ID of the user who created the board
-  user                User      @relation(fields: [userId], references: [id]) // Relation to the user who created the board
+  userId              String // The  user ID of the user who created the board
+  user                User      @relation(fields: [userId], references: [id],onDelete: Cascade) // Relation to the user who created the board
   createdAt           DateTime  @default(now()) // Timestamp when the board is created
   updatedAt           DateTime  @updatedAt // Timestamp when the board is last updated
   isAcceptingMessages Boolean   @default(true)

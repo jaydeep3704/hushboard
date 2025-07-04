@@ -46,7 +46,7 @@ export function Navbar({ user }: currentUserProps) {
       )}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between h-16 lg:h-20 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20  px-4 md:px-0">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 rounded-lg flex items-center justify-center shadow">
