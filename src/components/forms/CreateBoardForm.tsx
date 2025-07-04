@@ -6,8 +6,6 @@ import { useForm } from "react-hook-form"
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { RadioItem } from "@radix-ui/react-dropdown-menu";
 import { Lock, MessageCircle, PlusCircle, PlusCircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
@@ -16,14 +14,9 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog } from "@radix-ui/react-dialog";
-
-const BoardSchema = z.object({
-    title: z.string().min(1, "Board Title is required"),
-    description: z.string().min(10, "Description must be atleast 10 characters long"),
-    category: z.string().min(1, "Category is required"),
-    mode: z.string().min(2, "Mode is required"),
-    duration: z.string().optional()
-})
+import { createBoard } from "@/lib/auth/actions";
+import { toast } from "sonner";
+import { BoardSchema } from "@/lib/schema";
 
 export const categories = [
     { value: "technology", label: "Technology" },
@@ -52,12 +45,17 @@ export function CreateBoardForm() {
 
     async function onSubmit(unsafeData: z.infer<typeof BoardSchema>) {
         const { success, data, error } = BoardSchema.safeParse(unsafeData)
-        if(success){
-            console.log(data)
-            setOpen(false)
-            form.reset()
-        }
+        try {
+            if(success){
+                await createBoard(data);
+                setOpen(false)
+                toast.success("Board Created")
+                form.reset()
+            }
 
+        } catch (error) {
+            toast.error("An Error occured while creating board")
+        }
     }
 
     return (

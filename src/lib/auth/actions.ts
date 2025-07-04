@@ -13,35 +13,37 @@ import { createSession, removeUserFromSession } from "./session"
 import { cookies } from "next/headers"
 import { OAuthProvider } from "@prisma/client"
 import { getOAuthClient, OAuthClient } from "./core/oauth/base"
+import { BoardSchema } from "../schema"
+import { getCurrentUser } from "./currentUser"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function SignIn(unsafeData:z.infer<typeof SigninSchema>){
+export async function SignIn(unsafeData: z.infer<typeof SigninSchema>) {
   try {
-    const {success,data}=SigninSchema.safeParse(unsafeData)
-    if(!success) return {success:false,error:"Failed to Sign In User"}
+    const { success, data } = SigninSchema.safeParse(unsafeData)
+    if (!success) return { success: false, error: "Failed to Sign In User" }
 
-    const user=await prisma.user.findUnique({
-      where:{
-        email:data.email
+    const user = await prisma.user.findUnique({
+      where: {
+        email: data.email
       }
     })
 
-    if(!user) return {success:false,error:"User with this email doesn't exist. Please try again with different email"}
+    if (!user) return { success: false, error: "User with this email doesn't exist. Please try again with different email" }
 
-    const isCorrectPassword=await comparePasswords({
-      hashedPassword:user.password,
-      password:data.password,
-      salt:user.salt
+    const isCorrectPassword = await comparePasswords({
+      hashedPassword: user.password,
+      password: data.password,
+      salt: user.salt
     })
-    if(!isCorrectPassword) return {success:false,error:"Password is incorrect"}
+    if (!isCorrectPassword) return { success: false, error: "Password is incorrect" }
 
-    await createSession(user,await cookies())
-    
+    await createSession(user, await cookies())
+
     return { success: true, redirectTo: `/` }
 
-  } 
+  }
   catch (error) {
-    if(error instanceof Error && error.message!=="NEXT_REDIRECT"){
+    if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
       throw Error("An unexpected error occured")
     }
   }
@@ -171,17 +173,17 @@ export async function verifyCode(userId: string, OTP: string): Promise<{ success
     })
 
     await redis.del(`${userId}-OTP`)
-    await createSession(user,await cookies())
-} 
-catch (err) {
+    await createSession(user, await cookies())
+  }
+  catch (err) {
     console.error("Unexpected error in verifyCode:", err)
     return { success: false, error: "Something went wrong. Please try again later." }
-}
-redirect("/")
+  }
+  redirect("/")
 }
 
 
-export async function Logout(){
+export async function Logout() {
   await removeUserFromSession(await cookies())
   redirect("/sign-in")
 }
@@ -189,4 +191,35 @@ export async function oAuthSignIn(provider: OAuthProvider) {
   const client = getOAuthClient(provider)
   const url = client.createAuthURL(await cookies())
   redirect(url)
+}
+
+
+
+export async function createBoard(unsafeData: z.infer<typeof BoardSchema>) {
+  try {
+    const parsed = BoardSchema.safeParse(unsafeData);
+    if (!parsed.success) {
+      return { success: false, error: "Failed to Create Board", issues: parsed.error.errors };
+    }
+
+    const data = parsed.data;
+    const user = await getCurrentUser({
+      redirectIfNotFound: true,
+    });
+
+    const board=await prisma.board.create({
+      data:{
+        name:data.title,
+        description:data.description,
+        category:data.category,
+        mode:data.mode,
+        userId:user.id,
+        expiresAt:data.duration!=="" ? new Date(Date.now()+Number(data.duration)*60*60*1000):null
+      }
+    })
+    if(board) return { success: true, board };
+  } catch (error) {
+    console.error("Error creating board:", error);
+    return { success: false, error: "Unexpected error while creating board" };
+  }
 }
