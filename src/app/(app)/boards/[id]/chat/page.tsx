@@ -26,13 +26,26 @@ const MessageItem = ({ message, timeStamp }: Message) => {
 }
 
 export default function ChatPage() {
-    const { sendMessage, messages } = useSocket()
+    const { sendMessage, socket,joinRoom } = useSocket()
+    const[messages,setMessages]=useState<Message[]>([])
     const [message, setMessage] = useState("")
     const { id: boardId } = useParams()
     const [open, setOpen] = useState<boolean>(false)
 
     const chatContainerRef = useRef<HTMLDivElement | null>(null)
+    
 
+    useEffect(()=>{
+        joinRoom(boardId.toString())
+        if(socket){
+            socket.on('recieve-room-message',({message,timeStamp})=>{
+                console.log("Recieved message",message)
+                setMessages((prev)=>[...prev,{message,timeStamp}])
+            })
+        }
+    },[joinRoom])
+
+    
     useEffect(() => {
         const container = chatContainerRef.current
         if (container) {
@@ -123,7 +136,7 @@ export default function ChatPage() {
                         <Button
                             onClick={() => {
                                 if (message.trim()) {
-                                    sendMessage(message)
+                                    sendMessage(message,boardId as string)
                                     setMessage("")
                                 }
                             }}
