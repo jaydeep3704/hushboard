@@ -51,7 +51,7 @@ export function Filters() {
   ).current;
 
   return (
-    <Card className="col-span-1">
+    <Card className="lg:col-span-1 col-span-2 h-fit">
       <CardHeader>
         <CardTitle className="text-xl flex items-center gap-3">
           <FilterIcon className="size-5" /> Filters

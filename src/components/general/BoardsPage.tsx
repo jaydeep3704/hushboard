@@ -6,7 +6,9 @@ import {  Grid3X3, List } from "lucide-react"
 import { Suspense, useState } from "react"
 import { Board } from "./Board"
 import { Card } from "../ui/card"
-
+import { cn } from "@/lib/utils"
+import { EmptyState } from "./EmptyState"
+import { IconDisabled } from "@tabler/icons-react"
 export interface BoardProps{
     id:string,
     name:string,
@@ -18,9 +20,9 @@ export interface BoardProps{
 }
 
 
+
 function BoardsPage({boards}:{boards:BoardProps[]}) {
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-
     return (
         <section className="min-h-screen max-w-7xl mx-auto">
             <div className="flex  lg:justify-between  lg:flex-row flex-col gap-4 lg:gap-0  mb-5 px-4 md:px-0">
@@ -31,7 +33,7 @@ function BoardsPage({boards}:{boards:BoardProps[]}) {
                     <p className="text-slate-600 dark:text-slate-400 mt-2 text-lg">Create and manage your anonymous messaging spaces</p>
                 </div>
 
-                <div className="flex gap-3">
+                <div className=" gap-3 hidden lg:flex">
                     <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg p-1 h-fit">
                         <Button
                             variant={viewMode === "grid" ? "default" : "ghost"}
@@ -63,16 +65,22 @@ function BoardsPage({boards}:{boards:BoardProps[]}) {
                  <Filters />
                </Suspense> 
 
-                <div className="grid lg:grid-cols-2 gap-4 lg:col-span-2 ">
+                {boards.length!==0 ? (<div className={cn("grid gap-4 lg:col-span-2",viewMode==="grid" ? "lg:grid-cols-2" : "grid-cols-1")}>
                     {
                         boards.map((board:BoardProps)=>(
                             <Board id={board.id} description={board.description} category={board.category}
                             expiresAt={board.expiresAt} name={board.name}  mode={board.mode} status={board.status}
                             key={board.id}
+                            viewMode={viewMode}
+                            
                             />
                         ))
                     }
-                </div>
+                </div>) :
+                (<div className="col-span-2">
+                  <EmptyState/>
+                </div>)
+                }
             </div>
         </section>
     )
