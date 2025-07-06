@@ -33,8 +33,8 @@ function BoardsPage({boards}:{boards:BoardProps[]}) {
                     <p className="text-slate-600 dark:text-slate-400 mt-2 text-lg">Create and manage your anonymous messaging spaces</p>
                 </div>
 
-                <div className=" gap-3 hidden lg:flex">
-                    <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg p-1 h-fit">
+                <div className=" gap-3 flex">
+                    <div className="flex w-fit items-center border border-slate-200 dark:border-slate-700 rounded-lg p-1 h-fit">
                         <Button
                             variant={viewMode === "grid" ? "default" : "ghost"}
                             size="sm"
@@ -53,19 +53,19 @@ function BoardsPage({boards}:{boards:BoardProps[]}) {
                         </Button>
                     </div>
                     <CreateBoardForm/>
-                        
-
                 </div>
 
             </div>
 
             {/* left and right columns */}
             <div className="grid lg:grid-cols-3  gap-6 px-4 md:px-0">
+                {/* left column */}
                <Suspense fallback={<Card className="col-span-1 h-[400px]"></Card>}>
                  <Filters />
                </Suspense> 
 
-                {boards.length!==0 ? (<div className={cn("grid gap-4 lg:col-span-2",viewMode==="grid" ? "lg:grid-cols-2" : "grid-cols-1")}>
+                {boards.length!==0 ? 
+                (<div className={cn("grid gap-4 col-span-2 ",viewMode==="grid" ? "lg:grid-cols-2" : "grid-cols-1")}>
                     {
                         boards.map((board:BoardProps)=>(
                             <Board id={board.id} description={board.description} category={board.category}

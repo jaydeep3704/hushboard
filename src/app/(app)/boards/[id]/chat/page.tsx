@@ -96,7 +96,7 @@ export default function ChatPage() {
                 {/* Scrollable chat area */}
                 <div className="flex-1 overflow-hidden">
                     <div
-                        className="h-full overflow-y-auto p-4 space-y-4"
+                        className="h-full overflow-y-auto p-4 space-y-4 no-scrollbar"
                         ref={chatContainerRef}
                     >
                         {messages.length === 0 ? (
