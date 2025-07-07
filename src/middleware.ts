@@ -18,6 +18,7 @@ async function middlewareAuth(request:NextRequest){
       return NextResponse.redirect(new URL('/sign-in',request.url))
     }
   }
+
   if(authRoutes.includes(request.nextUrl.pathname)){
     if(user){
       return NextResponse.redirect(new URL('/',request.url))

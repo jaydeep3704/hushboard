@@ -13,10 +13,10 @@ interface Message {
 }
 
 interface ISocketContext {
-    sendMessage: (msg: string,roomId?:string) => any
+    sendMessage: (msg: string, roomId?: string) => any
     joinRoom: (roomId: string) => any
     messages: Message[],
-    socket:Socket
+    socket: Socket
 }
 
 const SocketContext = React.createContext<ISocketContext | null>(null)
@@ -30,49 +30,53 @@ export const useSocket = () => {
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: SocketProviderProps) => {
     const [socket, setSocket] = useState<Socket>()
     const [messages, setMessages] = useState<Message[]>([])
-
+    const [room, setRoom] = useState<string | null>(null)
     // ✅ Send message to server
     const sendMessage = useCallback(
-    (msg: string, roomId?: string) => {
-        if (!socket) return
+        (msg: string, roomId?: string) => {
+            if (!socket) return
 
-        const date = new Date()
-        const dateString = date.toLocaleString("en-US", {
-            day: "2-digit",
-            month: "short",
-            year: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-        })
+            const date = new Date()
+            const dateString = date.toLocaleString("en-US", {
+                day: "2-digit",
+                month: "short",
+                year: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+            })
 
-        if (roomId) {
-            // Room message
-            socket.emit("event:room-message", {
-                message: msg,
-                timeStamp: dateString,
-                roomId
-            })
-        } else {
-            // Global message
-            socket.emit("event:message", {
-                message: msg,
-                timeStamp: dateString
-            })
-        }
-    },
-    [socket]
-)
+            if (roomId) {
+
+                socket.emit("event:room-message", {
+                    message: msg,
+                    timeStamp: dateString,
+                    roomId
+                })
+            } else {
+                // Global message
+                socket.emit("event:message", {
+                    message: msg,
+                    timeStamp: dateString
+                })
+            }
+        },
+        [socket]
+    )
 
 
     // ✅ Join room on server
     const joinRoom: ISocketContext["joinRoom"] = useCallback(
         (roomId: string) => {
             if (!socket) return
+            if (room && room !== roomId) {
+                socket.emit("leave-room", room);
+            }
             console.log("Joining room:", roomId)
             socket.emit("event:join-room", { roomId })
+            setRoom(roomId)
         },
-        [socket]
+        [socket,room]
     )
 
     // ✅ Handle incoming message
@@ -87,7 +91,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
         const _socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL!)
         setSocket(_socket)
         _socket.on("message", onMessageRec)
-        
+
         return () => {
             _socket.disconnect()
             _socket.off("message", onMessageRec)
@@ -96,7 +100,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
     }, [onMessageRec])
 
     return (
-        <SocketContext.Provider value={{ sendMessage, joinRoom, messages,socket }}>
+        <SocketContext.Provider value={{ sendMessage, joinRoom, messages, socket }}>
             {children}
         </SocketContext.Provider>
     )
