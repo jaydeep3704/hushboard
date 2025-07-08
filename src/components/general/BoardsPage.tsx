@@ -16,7 +16,6 @@ export interface BoardProps{
     category:string,
     mode:string,
     status:string,
-    expiresAt:Date,
     createdAt:Date
 }
 
@@ -70,7 +69,7 @@ function BoardsPage({boards}:{boards:BoardProps[]}) {
                     {
                         boards.map((board:BoardProps)=>(
                             <Board id={board.id} description={board.description} category={board.category}
-                            expiresAt={board.expiresAt} name={board.name}  mode={board.mode} status={board.status}
+                             name={board.name}  mode={board.mode} status={board.status}
                             key={board.id}
                             createdAt={board.createdAt}
                             viewMode={viewMode}
