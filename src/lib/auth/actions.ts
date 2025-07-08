@@ -215,7 +215,6 @@ export async function createBoard(unsafeData: z.infer<typeof BoardSchema>) {
         category:data.category,
         mode:data.mode,
         userId:user.id,
-        expiresAt:data.duration!=="" ? new Date(Date.now()+Number(data.duration)*60*60*1000):null
       }
     })
     revalidatePath('/boards')
