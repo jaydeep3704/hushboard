@@ -10,152 +10,150 @@ import { Copy, MessageCircle, SendIcon, ShareIcon } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "next/navigation"
 import { toast } from "sonner"
-
-interface Message {
-    message: string
-    timeStamp: string
-}
-
-const MessageItem = ({ message, timeStamp }: Message) => {
-    return (
-        <div className="flex flex-col gap-1 p-3 rounded-lg bg-purple-100 dark:bg-purple-900/30">
-            <p className="break-words text-base">{message}</p>
-            <span className="text-xs text-muted-foreground self-end">{timeStamp}</span>
-        </div>
-    )
-}
+import { generateAnonName } from "@/lib/utils/anonGenerator"
+import { MessageItem, MessageProps } from "@/components/general/MessageItem"
 
 export default function ChatPage() {
-    const { sendMessage, socket, joinRoom } = useSocket()
-    const [messages, setMessages] = useState<Message[]>([])
-    const [message, setMessage] = useState("")
-    const { id: boardId } = useParams()
-    const [open, setOpen] = useState<boolean>(false)
+  const { sendMessage, socket, joinRoom } = useSocket()
+  const [messages, setMessages] = useState<MessageProps[]>([])
+  const [message, setMessage] = useState("")
+  const { id: boardId } = useParams()
+  const [open, setOpen] = useState<boolean>(false)
+  const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
-    const chatContainerRef = useRef<HTMLDivElement | null>(null)
+  const [anonName, setAnonName] = useState("")
 
+  useEffect(() => {
+    const storageKey = `anonName`
+    let savedName = localStorage.getItem(storageKey)
+    if (!savedName) {
+      savedName = generateAnonName()
+      localStorage.setItem(storageKey, savedName)
+    }
+    setAnonName(savedName)
 
-    useEffect(() => {
+    joinRoom(boardId.toString())
 
-        joinRoom(boardId.toString())
-        const handleMessage = ({ message, timeStamp }) => {
-            console.log("Recieved message", message)
-            setMessages((prev) => [...prev, { message, timeStamp }])
+    const handleMessage = ({ message, timeStamp, anonUser }) => {
+      console.log("Received message", message)
+      setMessages((prev) => [...prev, { message, timeStamp, anonUser }])
+    }
 
-        }
+    if (socket) {
+      socket.on("recieve-room-message", handleMessage)
+    }
+    return () => {
+      if (socket) {
+        socket.off("recieve-room-message", handleMessage)
+      }
+    }
+  }, [boardId, socket, joinRoom])
 
-        if (socket) {
-            socket.on("recieve-room-message", handleMessage)
-        }
-        return () => {
-            if (socket) {
-                socket.off("recieve-room-message", handleMessage)
-            }
-        }
-    }, [boardId, socket, joinRoom])
+  useEffect(() => {
+    const container = chatContainerRef.current
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      })
+    }
+  }, [messages])
 
-    useEffect(() => {
-        const container = chatContainerRef.current
-        if (container) {
-            container.scrollTo({
-                top: container.scrollHeight,
-                behavior: "smooth",
-            })
-        }
-    }, [messages])
-
-    return (
-        <div className="max-w-4xl mx-auto min-h-screen px-4 py-8 flex flex-col gap-6">
-            <div className="flex justify-between items-center">
-                <h1 className="flex items-center gap-2 lg:gap-3 text-xl lg:text-3xl font-bold text-center w-fit">
-                    <div className="p-2 bg-purple-600 rounded-lg">
-                        <MessageCircle className="size-4 lg:size-6 text-white" />
-                    </div>
-                    Chat Room
-                </h1>
-                <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="bg-purple-600 text-white hover:bg-purple-600/80">
-                            <ShareIcon />
-                            Share Link
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogTitle>Share Room Link</DialogTitle>
-                        <div className="flex items-center gap-2">
-                            <Input
-                                disabled
-                                className="px-5 text-ellipsis"
-                                value={`${process.env.NEXT_PUBLIC_DOMAIN}/anonymous/chat/${boardId}`}
-                            />
-                            <div
-                                className="bg-purple-600 p-2 cursor-pointer rounded-md"
-                                onClick={() => {
-                                    window.navigator.clipboard.writeText(
-                                        `${process.env.NEXT_PUBLIC_DOMAIN}/anonymous/chat/${boardId}`
-                                    )
-                                    toast.success("Link Copied to Clipboard!")
-                                }}
-                            >
-                                <Copy className="size-4 text-white" />
-                            </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                            Anyone with this link can join the group chat.
-                        </p>
-                        <Button
-                            className="bg-purple-600 w-full text-white font-semibold text-lg hover:bg-purple-600/80"
-                            onClick={() => setOpen(false)}
-                        >
-                            Close
-                        </Button>
-                    </DialogContent>
-                </Dialog>
+  return (
+    <div className="max-w-4xl mx-auto min-h-screen px-4 py-8 flex flex-col gap-6">
+      <div className="flex justify-between items-center">
+        <h1 className="flex items-center gap-2 lg:gap-3 text-xl lg:text-3xl font-bold text-center w-fit">
+          <div className="p-2 bg-purple-600 rounded-lg">
+            <MessageCircle className="size-4 lg:size-6 text-white" />
+          </div>
+          Chat Room
+        </h1>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-purple-600 text-white hover:bg-purple-600/80">
+              <ShareIcon />
+              Share Link
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogTitle>Share Room Link</DialogTitle>
+            <div className="flex items-center gap-2">
+              <Input
+                disabled
+                className="px-5 text-ellipsis"
+                value={`${process.env.NEXT_PUBLIC_DOMAIN}/anonymous/chat/${boardId}`}
+              />
+              <div
+                className="bg-purple-600 p-2 cursor-pointer rounded-md"
+                onClick={() => {
+                  window.navigator.clipboard.writeText(
+                    `${process.env.NEXT_PUBLIC_DOMAIN}/anonymous/chat/${boardId}`
+                  )
+                  toast.success("Link Copied to Clipboard!")
+                }}
+              >
+                <Copy className="size-4 text-white" />
+              </div>
             </div>
+            <p className="text-sm text-muted-foreground">
+              Anyone with this link can join the group chat.
+            </p>
+            <Button
+              className="bg-purple-600 w-full text-white font-semibold text-lg hover:bg-purple-600/80"
+              onClick={() => setOpen(false)}
+            >
+              Close
+            </Button>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-            <Card className="flex flex-col h-[80vh] bg-card/60 backdrop-blur-xl shadow-lg border border-primary/30 rounded-2xl overflow-hidden">
-                {/* Scrollable chat area */}
-                <div className="flex-1 overflow-hidden">
-                    <div
-                        className="h-full overflow-y-auto p-4 space-y-4 no-scrollbar"
-                        ref={chatContainerRef}
-                    >
-                        {messages.length === 0 ? (
-                            <div className="text-center text-muted-foreground italic">
-                                No messages yet.
-                            </div>
-                        ) : (
-                            messages.map((msg, index) => (
-                                <MessageItem key={index} message={msg.message} timeStamp={msg.timeStamp} />
-                            ))
-                        )}
-                    </div>
-                </div>
-
-                {/* Message input */}
-                <div className="border-t border-border p-4">
-                    <div className="flex items-center gap-3">
-                        <Input
-                            className="flex-1"
-                            placeholder="Type your message..."
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                        />
-                        <Button
-                            onClick={() => {
-                                if (message.trim()) {
-                                    sendMessage(message, boardId as string)
-                                    setMessage("")
-                                }
-                            }}
-                            className="flex gap-2 items-center px-4 bg-purple-600 text-white hover:bg-purple-600/80"
-                        >
-                            <SendIcon className="w-4 h-4" />
-                            Send
-                        </Button>
-                    </div>
-                </div>
-            </Card>
+      <Card className="flex flex-col h-[80vh] bg-card/60 backdrop-blur-xl shadow-lg border border-primary/30 rounded-2xl overflow-hidden">
+        <div className="flex-1 overflow-hidden">
+          <div
+            className="h-full overflow-y-auto p-4 space-y-4 no-scrollbar"
+            ref={chatContainerRef}
+          >
+            {messages.length === 0 ? (
+              <div className="text-center text-muted-foreground italic">
+                No messages yet.
+              </div>
+            ) : (
+              messages.map((msg, index) => (
+                <MessageItem
+                  key={index}
+                  message={msg.message}
+                  timeStamp={msg.timeStamp}
+                  anonUser={msg.anonUser}
+                />
+              ))
+            )}
+          </div>
         </div>
-    )
+
+        <div className="border-t border-border p-4">
+          <div className="flex items-center gap-3">
+            <Input
+              className="flex-1"
+              placeholder="Type your message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <Button
+              onClick={() => {
+                if (message.trim()) {
+                  sendMessage(message, boardId as string, anonName)
+                  setMessage("")
+                }
+              }}
+              className="flex gap-2 items-center px-4 bg-purple-600 text-white hover:bg-purple-600/80"
+            >
+              <SendIcon className="w-4 h-4" />
+              Send
+            </Button>
+          </div>
+        </div>
+      </Card>
+    </div>
+  )
 }

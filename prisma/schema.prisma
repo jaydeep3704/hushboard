@@ -17,7 +17,7 @@ model User {
   id           String         @id @default(uuid())
   email        String         @unique
   username     String         @unique
-  boards       Board[] 
+  boards       Board[]
   messages     Message[] // Messages created by the user
   password     String?
   salt         String?
@@ -25,37 +25,34 @@ model User {
   updatedAt    DateTime       @updatedAt
   isVerified   Boolean?       @default(false)
   OAuthAccount OAuthAccount[]
-  avatar String?
+  avatar       String?
 }
 
 model Board {
-  id          String   @id @default(uuid())  // This is enough for unique Board ID.
+  id          String    @id @default(uuid()) // This is enough for unique Board ID.
   name        String
   description String
   category    String
   mode        String
-  status      String   @default("active")
-  expiresAt   DateTime?
+  status      String    @default("active")
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages    Message[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
-
-
 
 model Message {
-  id        String   @id @default(uuid())
-  boardId   String   // changed to String
-  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  content   String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  boardId      String // Common for both modes
+  board        Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  targetUserId String?
+  targetUser   User?    @relation(fields: [targetUserId], references: [id])
+  anonName     String // Sender (anonymous or registered name)
+  content      String // Message content
+  mode         String // "group" or "private"
+  createdAt    DateTime @default(now())
 }
-
 
 enum OAuthProvider {
   google
@@ -66,12 +63,13 @@ model OAuthAccount {
   provider          OAuthProvider
   providerAccountId String
   userId            String
-  username          String?      // ✅ Optional: store GitHub/Google username
+  username          String? // ✅ Optional: store GitHub/Google username
 
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  avatar            String?       
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatar    String?
+
   @@id([provider, providerAccountId]) // composite primary key
   @@unique([provider, providerAccountId])
 }

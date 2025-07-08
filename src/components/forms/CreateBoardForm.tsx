@@ -38,7 +38,6 @@ export function CreateBoardForm() {
             description: '',
             category: '',
             mode: '',
-            duration: "",
         },
         resolver: zodResolver(BoardSchema)
     })
@@ -161,45 +160,6 @@ export function CreateBoardForm() {
                             </FormItem>
                         )}
                     />
-                    <div className="flex justify-between ">
-                        <Label className="text-md">Auto-deactivate board</Label>
-                        <Switch checked={auto} onCheckedChange={() => {
-                            if (auto == true) {
-                                form.setValue("duration", "")
-                            }
-                            setAuto(!auto)
-                        }} />
-                    </div>
-                    {
-                        auto &&
-                        <FormField
-                            control={form.control}
-                            name="duration"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-md">Duration</FormLabel>
-                                    <FormControl >
-                                        <Select value={field.value} onValueChange={(value) => field.onChange(value)}>
-                                            <SelectTrigger className="w-full" >
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="1">1 hour</SelectItem>
-                                                    <SelectItem value="3">3 hours</SelectItem>
-                                                    <SelectItem value="6">6 hours</SelectItem>
-                                                    <SelectItem value="12">12 hours</SelectItem>
-                                                    <SelectItem value="24">24 hours</SelectItem>
-                                                    <SelectItem value="168">1 Week</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                    }
                     <div className="grid grid-cols-2 gap-4">
                         <Button variant="outline" type="button" onClick={()=>setOpen(false)}>Cancel</Button>
                         <Button variant="gradient" className="rounded-lg hover:opacity-80" type="submit">

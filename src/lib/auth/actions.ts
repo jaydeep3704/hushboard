@@ -15,6 +15,7 @@ import { OAuthProvider } from "@prisma/client"
 import { getOAuthClient, OAuthClient } from "./core/oauth/base"
 import { BoardSchema } from "../schema"
 import { getCurrentUser } from "./currentUser"
+import { revalidatePath } from "next/cache"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function SignIn(unsafeData: z.infer<typeof SigninSchema>) {
@@ -217,7 +218,9 @@ export async function createBoard(unsafeData: z.infer<typeof BoardSchema>) {
         expiresAt:data.duration!=="" ? new Date(Date.now()+Number(data.duration)*60*60*1000):null
       }
     })
+    revalidatePath('/boards')
     if(board) return { success: true, board };
+    
   } catch (error) {
     console.error("Error creating board:", error);
     return { success: false, error: "Unexpected error while creating board" };

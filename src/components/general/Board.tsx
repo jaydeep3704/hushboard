@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { BoardProps } from "./BoardsPage";
-import { LockIcon, MessageCircle, UserIcon } from "lucide-react";
+import { LockIcon, MessageCircle, MoreVertical, UserIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { gt } from "@/lib/utils/GlobalTimer";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const categoryColors = {
     technology: "bg-gradient-to-r from-indigo-500 to-purple-500",
@@ -29,11 +30,21 @@ export function Board({
     mode,
     status,
     expiresAt,
+    createdAt,
     viewMode,
 }: BoardComponentProps) {
+
     const router=useRouter()
     return (
-        <Card className="hover:shadow-xl transition h-auto cursor-pointer" onClick={()=>router.push(`boards/${id}/${mode}`)}>
+        <Card className="hover:shadow-xl transition h-auto cursor-pointer relative" onClick={()=>router.push(`boards/${id}/${mode}`)}>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild className="absolute top-2 right-2">
+                    <Button variant="ghost"><MoreVertical/></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    
+                </DropdownMenuContent>
+            </DropdownMenu>
             <CardHeader>
                 <div className="flex gap-2 items-center">
                     <div
@@ -69,7 +80,6 @@ export function Board({
                         <MessageCircle className="size-4" /> 0 messages
                     </div>
                 </div>
-                
             </CardContent>
         </Card>
     );
