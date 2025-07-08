@@ -8,7 +8,6 @@ import { Board } from "./Board"
 import { Card } from "../ui/card"
 import { cn } from "@/lib/utils"
 import { EmptyState } from "./EmptyState"
-import { IconDisabled } from "@tabler/icons-react"
 export interface BoardProps{
     id:string,
     name:string,

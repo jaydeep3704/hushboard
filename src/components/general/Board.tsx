@@ -29,7 +29,6 @@ export function Board({
     category,
     mode,
     status,
-    expiresAt,
     createdAt,
     viewMode,
 }: BoardComponentProps) {
@@ -41,9 +40,6 @@ export function Board({
                 <DropdownMenuTrigger asChild className="absolute top-2 right-2">
                     <Button variant="ghost"><MoreVertical/></Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    
-                </DropdownMenuContent>
             </DropdownMenu>
             <CardHeader>
                 <div className="flex gap-2 items-center">
